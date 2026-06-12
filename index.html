@@ -70,14 +70,22 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 .sib-section{padding:16px 14px 4px}
 .sib-label{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:0 4px;margin-bottom:4px}
-.sib-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:.8rem;color:var(--muted);background:none;border:none;cursor:pointer;text-align:left;width:100%;transition:all .15s;font-family:'Inter',sans-serif;line-height:1.3}
-.sib-btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.sib-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:.8rem;color:var(--muted);background:none;border:none;cursor:pointer;text-align:left;width:100%;transition:all .18s;font-family:'Inter',sans-serif;line-height:1.3;position:relative}
+.sib-btn::after{content:'→';position:absolute;right:10px;font-size:.72rem;opacity:0;transform:translateX(-4px);transition:all .18s;color:var(--lime)}
+.sib-btn:hover{background:rgba(200,241,53,.06);color:var(--text);transform:translateX(2px)}
+.sib-btn:hover::after{opacity:1;transform:translateX(0)}
+.sib-btn:hover .sib-ic{opacity:.9}
 .sib-btn.active{background:var(--lime-bg);color:var(--lime)}
+.sib-btn.active::after{opacity:1;transform:translateX(0);color:var(--lime)}
+/* pulse on first items to draw attention */
+@keyframes sibPulse{0%,100%{background:transparent}50%{background:rgba(200,241,53,.07)}}
+.sib-btn.hint{animation:sibPulse 2s ease-in-out 3}
 .sib-ic{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.45;transition:opacity .15s}
 .sib-btn:hover .sib-ic{opacity:.7}
 .sib-btn.active .sib-ic{opacity:1}
 .sib-ic svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .sib-divider{height:1px;background:var(--border);margin:10px 14px}
+.sib-guide{display:flex;align-items:center;gap:6px;margin:10px 14px 2px;padding:7px 10px;border-radius:8px;background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.14);font-size:.72rem;color:var(--lime);font-weight:500;animation:sibPulse 2s ease-in-out 4 1s}
 /* progress tracker */
 .progress-wrap{padding:14px 18px;border-top:1px solid var(--border);margin-top:auto}
 .progress-label{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
@@ -264,6 +272,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
         <button class="sib-btn" onclick="quick('What are the pricing and engagement models?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>Pricing & Models</button>
         <button class="sib-btn" onclick="quick('What technologies does FiveNodes specialise in?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>Tech Stack</button>
         <button class="sib-btn" onclick="quick('How do I get started or book a discovery call?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Get Started</button>
+      </div>
+      <div class="sib-guide">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3"/></svg>
+        Click any topic to explore
       </div>
       <div class="progress-wrap">
         <div class="progress-label">Topics covered</div>
@@ -486,6 +498,7 @@ document.getElementById('startBtn').addEventListener('click', () => {
   setTimeout(() => {
     document.getElementById('welcome').style.display = 'none';
     document.getElementById('shell').classList.add('vis');
+    setTimeout(initSidebarHints, 800);
   }, 300);
   addAI(
     "**Hi there, welcome to FiveNodes!** 👋\n\nI'm Alex — I'll walk you through who we are, what we've built, and how we work. No slides, no fluff — just what's relevant to you.\n\n**What brings you here today?** Even a few words helps me tailor this to what you actually need.",
@@ -809,6 +822,23 @@ function render(md) {
     .replace(/<p><\/p>/g,'')
     .replace(/<p>(<[hul])/g,'$1')
     .replace(/(<\/[hul][^>]*>)<\/p>/g,'$1');
+}
+
+// ── SIDEBAR ONBOARDING ──
+function initSidebarHints() {
+  // pulse the first button of each section
+  document.querySelectorAll('.sib-section').forEach(sec => {
+    const first = sec.querySelector('.sib-btn');
+    if (first) first.classList.add('hint');
+  });
+  // remove hint class + hide guide banner after first sidebar click
+  const guide = document.querySelector('.sib-guide');
+  document.querySelectorAll('.sib-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sib-btn.hint').forEach(b => b.classList.remove('hint'));
+      if (guide) { guide.style.transition = 'opacity .4s'; guide.style.opacity = '0'; setTimeout(() => guide.style.display = 'none', 400); }
+    }, { once: false });
+  });
 }
 
 // ── KEYBOARD ──
