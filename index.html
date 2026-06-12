@@ -73,8 +73,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .sib-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:.8rem;color:var(--muted);background:none;border:none;cursor:pointer;text-align:left;width:100%;transition:all .15s;font-family:'Inter',sans-serif;line-height:1.3}
 .sib-btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
 .sib-btn.active{background:var(--lime-bg);color:var(--lime)}
-.sib-ic{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
-.sib-btn.active .sib-ic{background:rgba(200,241,53,.1)}
+.sib-ic{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.45;transition:opacity .15s}
+.sib-btn:hover .sib-ic{opacity:.7}
+.sib-btn.active .sib-ic{opacity:1}
+.sib-ic svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .sib-divider{height:1px;background:var(--border);margin:10px 14px}
 /* progress tracker */
 .progress-wrap{padding:14px 18px;border-top:1px solid var(--border);margin-top:auto}
@@ -98,6 +100,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .msg.user{justify-content:flex-end}
 .av{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;letter-spacing:.03em}
 .msg.ai .av{background:var(--lime);color:#05060E}
+.msg.ai .av svg{width:16px;height:16px;flex-shrink:0}
 .msg.user .av{background:var(--card2);border:1px solid var(--border2);color:var(--muted)}
 .bubble{background:var(--card);border:1px solid var(--border);border-radius:0 14px 14px 14px;padding:13px 16px;font-size:.875rem;line-height:1.74;color:var(--text);max-width:620px;word-break:break-word}
 .msg.user .bubble{background:var(--card2);border-color:var(--border2);border-radius:14px 0 14px 14px}
@@ -209,31 +212,31 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sib-section">
-        <div class="sib-label">Quick explore</div>
-        <button class="sib-btn" onclick="quick('Tell me about FiveNodes — who you are and what you do.')"><span class="sib-ic">🏢</span>About FiveNodes</button>
-        <button class="sib-btn" onclick="quick('Walk me through your services.')"><span class="sib-ic">⚙️</span>Services</button>
-        <button class="sib-btn" onclick="quick('Show me your portfolio — past projects and results.')"><span class="sib-ic">💼</span>Portfolio & Work</button>
-        <button class="sib-btn" onclick="quick('What AI capabilities does FiveNodes have?')"><span class="sib-ic">🤖</span>AI Capabilities</button>
-        <button class="sib-btn" onclick="quick('Share your best case studies and results.')"><span class="sib-ic">📊</span>Case Studies</button>
+        <div class="sib-label">Explore</div>
+        <button class="sib-btn" onclick="quick('Tell me about FiveNodes — who you are and what you do.')"><span class="sib-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>About FiveNodes</button>
+        <button class="sib-btn" onclick="quick('Walk me through your services.')"><span class="sib-ic"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Services</button>
+        <button class="sib-btn" onclick="quick('Show me your portfolio — past projects and results.')"><span class="sib-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></span>Portfolio & Work</button>
+        <button class="sib-btn" onclick="quick('What AI capabilities does FiveNodes have?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 014 4v1h1a3 3 0 010 6h-1v1a4 4 0 01-8 0v-1H7a3 3 0 010-6h1V6a4 4 0 014-4z"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/></svg></span>AI Capabilities</button>
+        <button class="sib-btn" onclick="quick('Share your best case studies and results.')"><span class="sib-ic"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Case Studies</button>
       </div>
       <div class="sib-divider"></div>
       <div class="sib-section">
         <div class="sib-label">By industry</div>
-        <button class="sib-btn" onclick="quick('What fintech experience does FiveNodes have?')"><span class="sib-ic">💳</span>Fintech</button>
-        <button class="sib-btn" onclick="quick('What have you built for healthcare clients?')"><span class="sib-ic">🏥</span>Healthcare</button>
-        <button class="sib-btn" onclick="quick('Tell me about your IoT and connected device work.')"><span class="sib-ic">📡</span>IoT & Hardware</button>
-        <button class="sib-btn" onclick="quick('What SaaS products have you built?')"><span class="sib-ic">☁️</span>SaaS Products</button>
-        <button class="sib-btn" onclick="quick('Do you have HR tech or recruitment software experience?')"><span class="sib-ic">👥</span>HR Tech</button>
-        <button class="sib-btn" onclick="quick('What e-commerce work have you done?')"><span class="sib-ic">🛒</span>E-commerce</button>
-        <button class="sib-btn" onclick="quick('Any logistics or supply chain experience?')"><span class="sib-ic">🚚</span>Logistics</button>
+        <button class="sib-btn" onclick="quick('What fintech experience does FiveNodes have?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>Fintech</button>
+        <button class="sib-btn" onclick="quick('What have you built for healthcare clients?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Healthcare</button>
+        <button class="sib-btn" onclick="quick('Tell me about your IoT and connected device work.')"><span class="sib-ic"><svg viewBox="0 0 24 24"><path d="M1.42 9a16 16 0 0121.16 0M5 12.55a11 11 0 0114.08 0M10.54 17.1a6 6 0 012.92 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg></span>IoT & Hardware</button>
+        <button class="sib-btn" onclick="quick('What SaaS products have you built?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></span>SaaS Products</button>
+        <button class="sib-btn" onclick="quick('Do you have HR tech or recruitment software experience?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>HR Tech</button>
+        <button class="sib-btn" onclick="quick('What e-commerce work have you done?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span>E-commerce</button>
+        <button class="sib-btn" onclick="quick('Any logistics or supply chain experience?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>Logistics</button>
       </div>
       <div class="sib-divider"></div>
       <div class="sib-section">
         <div class="sib-label">Working together</div>
-        <button class="sib-btn" onclick="quick('How does your development process work, step by step?')"><span class="sib-ic">🗺️</span>Our Process</button>
-        <button class="sib-btn" onclick="quick('What are the pricing and engagement models?')"><span class="sib-ic">💰</span>Pricing & Models</button>
-        <button class="sib-btn" onclick="quick('What technologies does FiveNodes specialise in?')"><span class="sib-ic">🔧</span>Tech Stack</button>
-        <button class="sib-btn" onclick="quick('How do I get started or book a discovery call?')"><span class="sib-ic">📅</span>Get Started</button>
+        <button class="sib-btn" onclick="quick('How does your development process work, step by step?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 012 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>Our Process</button>
+        <button class="sib-btn" onclick="quick('What are the pricing and engagement models?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>Pricing & Models</button>
+        <button class="sib-btn" onclick="quick('What technologies does FiveNodes specialise in?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>Tech Stack</button>
+        <button class="sib-btn" onclick="quick('How do I get started or book a discovery call?')"><span class="sib-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Get Started</button>
       </div>
       <div class="progress-wrap">
         <div class="progress-label">Topics covered</div>
@@ -312,7 +315,44 @@ document.getElementById('startBtn').addEventListener('click', () => {
   );
 });
 
+// ── DEMO RESPONSES (shown when no API key is set) ──
+const DEMO = {
+  default: "Great question! FiveNodes is a **software engineering company** that builds AI-powered SaaS products, enterprise platforms, IoT apps, and custom software for startups and scaling businesses.\n\nWe're based in Lahore, Pakistan with clients across the **UK, UAE, Saudi Arabia, US, and Europe**. Our team of 20+ engineers, designers, and product specialists has shipped **50+ products** across fintech, healthcare, HR tech, logistics, IoT, and more.\n\nWhat makes us different: we're **architecture-first and AI-native** — we don't just write code, we design systems that scale and integrate intelligence from day one.\n\n**What kind of product are you looking to build?** That'll help me point you to the most relevant work we've done.",
+
+  saas: "SaaS is our bread and butter. We've built everything from **early-stage MVPs to enterprise platforms** handling hundreds of thousands of users.\n\nA few standout examples:\n- **Recruitly** — a UK-based recruitment CRM that reduced time-to-hire by 40% and tripled recruiter capacity\n- **Everest** — a multi-tenant enterprise SaaS with complex role-based access and reporting\n- **NeuralDesk** — an AI-powered support platform that automatically resolves 80% of tickets without human involvement\n\nOur stack is React/Next.js on the front, Node.js or Python on the back, PostgreSQL, Redis, and AWS infrastructure — all production-grade from day one.\n\n**What's the core problem your SaaS product is solving?** I can pull up the most relevant case study.",
+
+  ai: "AI is a core capability for us — not a feature we bolt on at the end. We've shipped production AI systems across several clients.\n\n**What we actually build:**\n- **RAG pipelines** — connecting LLMs to your knowledge base for accurate, cited answers (we did this for NeuralDesk, cutting support tickets by 80%)\n- **AI agents** — multi-step autonomous workflows with tool use and human-in-the-loop controls\n- **LLM integration** — embedding OpenAI, Anthropic Claude, or open-source models into existing products\n- **Document Q&A** — upload contracts, reports, or manuals and query them conversationally\n- **Predictive analytics** — ML pipelines that turn your operational data into forward-looking decisions\n\nWe work with **OpenAI, Anthropic Claude, Google Gemini, and open-source models** (Llama, Mistral). We choose based on your latency, cost, and privacy requirements — not vendor preference.\n\n**What's the AI use case you're exploring?** Happy to share which approach we'd recommend.",
+
+  portfolio: "We've shipped 50+ products across a wide range — here are some highlights:\n\n**Fintech:** Numerico (investment analytics), Kashat (microloan decisioning), FinQalab (gamified financial literacy), Peace Coin (blockchain payments)\n\n**HR & Recruitment:** Recruitly (UK CRM — 40% faster time-to-hire), Smarty Men (workforce + e-comm)\n\n**AI & Support:** NeuralDesk (80% auto-resolution), ESG Roadmap (sustainability compliance)\n\n**IoT & Wellness:** Primal Plunge (cold plunge chiller control via Tuya), Cayka (UK smart home platform)\n\n**Logistics:** Cheetay (10,000+ daily orders, 99.9% uptime), Parwaz (live fleet tracking)\n\n**Healthcare:** ClinicFlow (HIPAA-compliant clinic management)\n\n**E-commerce:** Ullmanna (Scandinavia), Anne Barge (US luxury retail), Sajilni (Middle East events)\n\n**Which of these industries is closest to what you're building?** I can go deeper on any of them.",
+
+  process: "Our process is designed to eliminate surprises. Here's exactly how it works:\n\n**1. Discovery (1–2 weeks)** — We dig into your requirements, audit existing systems if any, and produce an architecture plan. You know exactly what you're getting before we write a line of code.\n\n**2. Design Sprint (1–2 weeks)** — Wireframes, user flows, and a full design system in Figma. You see the product visually before build starts. Changes here are cheap; changes in production aren't.\n\n**3. Build (week 3 onwards)** — Agile sprints with weekly demos. You always have a live staging environment to review. We don't disappear into a black box.\n\n**4. Launch & Handover** — Production deployment, full documentation, and team training. We don't abandon you post-launch.\n\n**5. Ongoing (optional)** — Retainer for features, scaling, and maintenance. Many clients stay with us long-term as their core technical team.\n\n**Typical timelines:** MVP in 6–10 weeks · Full SaaS in 3–6 months · Enterprise systems 4–8 months.\n\n**What's your situation** — greenfield build, existing product that needs scaling, or something else?",
+
+  pricing: "Here's the honest picture on pricing:\n\n**Project-based** — Fixed scope, fixed price. Best when requirements are clear. MVPs typically start from **$15,000–$30,000** depending on complexity.\n\n**Dedicated team** — A full pod (engineers + designer + PM) embedded in your team on a monthly basis. Ranges from **$8,000–$20,000/month** depending on team size. Most common for ongoing product development.\n\n**Sprint retainer** — Monthly capacity block for faster-moving teams. Flexible scope, predictable cost.\n\nThe right model depends on where you are. A startup building v1 usually wants project-based. A scaling company that ships continuously usually wants a dedicated team.\n\nFor a specific quote we'd need a 30-minute discovery call to scope it properly — but we never leave you guessing on budget.\n\n**Want to book a call?** → [calendly.com/sabee-5ivenodes/30min](https://calendly.com/sabee-5ivenodes/30min)",
+
+  iot: "IoT is one of our specialist areas. We've built connected device platforms across **smart home, wellness, and energy management**.\n\nKey projects:\n- **Primal Plunge** — mobile app to control cold plunge chillers via Tuya IoT. Real-time device status, session tracking, wellness content.\n- **Cayka** — a full smart home platform for the UK market: device management, automation rules, energy monitoring.\n- **Axxios, Simi Connect, Zimi, GTensor, Klugar** — additional connected device and sensor platforms\n\nWe work across **Tuya, Zigbee, MQTT, and custom hardware protocols**. We handle the full stack — firmware communication layer, cloud backend, mobile app (React Native or Flutter), and web dashboard.\n\nThe hardest part of IoT is usually reliability under variable connectivity — we've solved that on multiple platforms.\n\n**What's the device or hardware you're building around?**",
+
+  fintech: "Fintech is our most active industry. We've built across payments, lending, investment, and compliance:\n\n- **Numerico** — real-time investment analytics and portfolio management for institutional clients\n- **Kashat** — microloan platform with real-time decisioning and KYC integration for emerging markets\n- **FinQalab** — gamified financial literacy with live market data\n- **Peace Coin** — blockchain-based payments and rewards\n- **Recruitly** — while HR tech, it handles complex billing and subscription logic similar to fintech\n\nWe understand the constraints: **regulatory compliance, data security, audit trails, real-time processing, and the cost of being wrong**. We don't treat fintech like a normal web app.\n\n**What's the fintech use case** — payments, lending, investment, compliance, or something else?",
+
+  team: "The team that builds your product is the one that matters most — so here's who we are:\n\n**20+ engineers, designers, and product specialists** based in Lahore, Pakistan. Every project is **senior-led** — we don't bait-and-switch with juniors after the sales process.\n\nOur leadership has built and scaled products to hundreds of thousands of users. We've seen what breaks at scale and we design for it from the start.\n\n**How we work with clients:** We act as an embedded technical partner, not a vendor. We're in your Slack, on your standups, and accountable to your roadmap — not just our deliverables.\n\nWe've worked with clients from pre-seed startups to enterprise companies across 8+ industries. The relationship usually starts with one project and becomes a long-term partnership.\n\n**Ready to talk specifics?** A 30-minute call with Sabee is the fastest way to know if we're the right fit → [Book here](https://calendly.com/sabee-5ivenodes/30min)",
+};
+
+function getDemoResponse(txt) {
+  const t = txt.toLowerCase();
+  if (t.match(/saas|platform|product|startup|mvp|build/)) return DEMO.saas;
+  if (t.match(/ai|llm|artificial|machine|rag|agent|chatbot|neural|openai|claude/)) return DEMO.ai;
+  if (t.match(/portfolio|project|work|case|past|built|show/)) return DEMO.portfolio;
+  if (t.match(/process|how do you|workflow|sprint|timeline|delivery/)) return DEMO.process;
+  if (t.match(/pric|cost|budget|rate|engagement|model|retainer|money/)) return DEMO.pricing;
+  if (t.match(/iot|device|hardware|smart home|connected|tuya|sensor/)) return DEMO.iot;
+  if (t.match(/fintech|finance|payment|lending|invest|banking|crypto/)) return DEMO.fintech;
+  if (t.match(/team|who are|about you|company|fivenodes|tell me about|who is/)) return DEMO.default;
+  if (t.match(/team|engineer|staff|people|senior|developer/)) return DEMO.team;
+  return DEMO.default;
+}
+
 // ── SEND ──
+const DEMO_MODE = false;
+
 async function send() {
   const el = document.getElementById('inp');
   const txt = el.value.trim();
@@ -325,11 +365,27 @@ async function send() {
   addUser(txt);
   history.push({ role:'user', content:txt });
 
-  // typing indicator
   const typingId = 'typing-' + Date.now();
   addTyping(typingId);
 
-  // call streaming API
+  if (DEMO_MODE) {
+    // simulate network delay then stream the demo response
+    await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
+    removeEl(typingId);
+    const response = getDemoResponse(txt);
+    const bubbleId = 'bubble-' + Date.now();
+    addStreamBubble(bubbleId);
+    await streamText(bubbleId, response);
+    history.push({ role:'assistant', content:response });
+    injectCards(bubbleId, response);
+    updateTopics(response);
+    generateChips(response);
+    busy = false;
+    document.getElementById('sendBtn').disabled = false;
+    return;
+  }
+
+  // ── LIVE API MODE ──
   let fullText = '';
   try {
     const res = await fetch('/api/chat', {
@@ -342,7 +398,7 @@ async function send() {
 
     removeEl(typingId);
     const bubbleId = 'bubble-' + Date.now();
-    const bubble = addStreamBubble(bubbleId);
+    addStreamBubble(bubbleId);
     const reader = res.body.getReader();
     const dec = new TextDecoder();
     let buf = '';
@@ -365,12 +421,8 @@ async function send() {
     }
     finaliseStream(bubbleId, fullText);
     history.push({ role:'assistant', content:fullText });
-
-    // inject project cards
     injectCards(bubbleId, fullText);
-    // update topic tracker
     updateTopics(fullText);
-    // generate contextual chips
     generateChips(fullText);
 
   } catch (e) {
@@ -380,6 +432,22 @@ async function send() {
 
   busy = false;
   document.getElementById('sendBtn').disabled = false;
+}
+
+// simulate streaming character by character
+async function streamText(bubbleId, text) {
+  let shown = '';
+  const chars = text.split('');
+  // chunk into groups for realistic speed
+  let i = 0;
+  while (i < chars.length) {
+    const chunk = Math.floor(3 + Math.random() * 8);
+    shown += chars.slice(i, i + chunk).join('');
+    updateStream(bubbleId, shown);
+    i += chunk;
+    await new Promise(r => setTimeout(r, 18 + Math.random() * 12));
+  }
+  finaliseStream(bubbleId, text);
 }
 
 function quick(text) {
@@ -396,10 +464,12 @@ function addUser(text) {
   scrollBot();
 }
 
+const AI_AV = `<div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="#05060E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 014 4v1h1a3 3 0 010 6h-1v1a4 4 0 01-8 0v-1H7a3 3 0 010-6h1V6a4 4 0 014-4z"/><circle cx="9" cy="10" r="1" fill="#05060E" stroke="none"/><circle cx="15" cy="10" r="1" fill="#05060E" stroke="none"/></svg></div>`;
+
 function addAI(md, chips) {
   const d = document.createElement('div');
   d.className = 'msg ai';
-  d.innerHTML = `<div class="av">AI</div><div class="bubble">${render(md)}</div>`;
+  d.innerHTML = `${AI_AV}<div class="bubble">${render(md)}</div>`;
   chat().appendChild(d);
   if (chips) showChips(chips);
   scrollBot();
@@ -408,7 +478,7 @@ function addAI(md, chips) {
 function addTyping(id) {
   const d = document.createElement('div');
   d.className = 'msg ai'; d.id = id;
-  d.innerHTML = `<div class="av">AI</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  d.innerHTML = `${AI_AV}<div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
   chat().appendChild(d);
   scrollBot();
 }
@@ -416,7 +486,7 @@ function addTyping(id) {
 function addStreamBubble(id) {
   const d = document.createElement('div');
   d.className = 'msg ai';
-  d.innerHTML = `<div class="av">AI</div><div class="bubble" id="${id}"><span class="cursor"></span></div>`;
+  d.innerHTML = `${AI_AV}<div class="bubble" id="${id}"><span class="cursor"></span></div>`;
   chat().appendChild(d);
   scrollBot();
   return document.getElementById(id);
