@@ -818,62 +818,52 @@ function addStreamBubble(id) {
   return document.getElementById(id);
 }
 
-// Typewriter queue — smooth character drip
+// Typewriter queue
 let _twQueue = '';
 let _twDisplayed = '';
 let _twId = null;
 let _twRaf = null;
 let _twDone = false;
-const TW_SPEED = 18; // chars per frame (~16ms = ~1100 cps, feels natural)
+let _twFinalText = '';
+const TW_CHARS = 6; // chars per frame at 60fps ≈ natural reading pace
 
 function _twTick() {
   if (!_twId) return;
   const el = document.getElementById(_twId);
-  if (!el) return;
+  if (!el) { _twRaf = null; return; }
+
   if (_twQueue.length > 0) {
-    const take = Math.min(TW_SPEED, _twQueue.length);
+    const take = Math.min(TW_CHARS, _twQueue.length);
     _twDisplayed += _twQueue.slice(0, take);
     _twQueue = _twQueue.slice(take);
-    el.innerHTML = render(_twDisplayed) + (_twDone && _twQueue.length === 0 ? '' : '<span class="cursor"></span>');
+    const finished = _twDone && _twQueue.length === 0;
+    el.innerHTML = render(_twDisplayed) + (finished ? '' : '<span class="cursor"></span>');
     scrollBot();
+    // silent clean render once fully drained
+    if (finished && _twFinalText) {
+      el.innerHTML = render(_twFinalText);
+      scrollBot();
+    }
   }
-  if (!_twDone || _twQueue.length > 0) {
-    _twRaf = requestAnimationFrame(_twTick);
-  }
+
+  _twRaf = (_twDone && _twQueue.length === 0) ? null : requestAnimationFrame(_twTick);
 }
 
 function initTypewriter(id) {
-  _twId = id; _twQueue = ''; _twDisplayed = ''; _twDone = false;
+  _twId = id; _twQueue = ''; _twDisplayed = ''; _twDone = false; _twFinalText = '';
   if (_twRaf) cancelAnimationFrame(_twRaf);
   _twRaf = requestAnimationFrame(_twTick);
 }
 
 function updateStream(id, fullText) {
-  // Feed only NEW characters into the queue
   const newChars = fullText.slice(_twDisplayed.length + _twQueue.length);
   if (newChars) _twQueue += newChars;
 }
 
 function finaliseStream(id, text) {
+  _twFinalText = text;
   _twDone = true;
-  // Drain remaining queue, then do a clean final render
-  const drain = () => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (_twQueue.length > 0) {
-      const take = Math.min(TW_SPEED * 2, _twQueue.length);
-      _twDisplayed += _twQueue.slice(0, take);
-      _twQueue = _twQueue.slice(take);
-      el.innerHTML = render(_twDisplayed) + (_twQueue.length > 0 ? '<span class="cursor"></span>' : '');
-      scrollBot();
-      requestAnimationFrame(drain);
-    } else {
-      el.innerHTML = render(text);
-      scrollBot();
-    }
-  };
-  if (_twRaf) cancelAnimationFrame(_twRaf);
-  drain();
+  // typewriter loop keeps running naturally until queue empties — no force drain
 }
 
 function showChips(chips) {
