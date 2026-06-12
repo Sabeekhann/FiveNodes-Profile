@@ -824,7 +824,13 @@ function updateStream(id, text) {
 
 function finaliseStream(id, text) {
   const el = document.getElementById(id) || id;
-  if (el) el.innerHTML = render(text);
+  if (!el) return;
+  el.style.transition = 'opacity .18s ease';
+  el.style.opacity = '0.4';
+  requestAnimationFrame(() => {
+    el.innerHTML = render(text);
+    requestAnimationFrame(() => { el.style.opacity = '1'; });
+  });
 }
 
 function showChips(chips) {
