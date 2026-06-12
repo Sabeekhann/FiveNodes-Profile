@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FiveNodes — Interactive Company Profile</title>
+<meta name="robots" content="noindex"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://5ivenodes.com/images/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05060E;--card:#0D0F1C;--card2:#111325;--card3:#151829;
+  --border:#1E2035;--border2:#252840;--text:#E8EAF2;--muted:#8B8FA8;--dim:#454760;
+  --lime:#C8F135;--lime-bg:rgba(200,241,53,0.07);--lime-border:rgba(200,241,53,0.18);
+  --red:#FF4D6A;--blue:#4D9FFF;
+}
+html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
+
+/* ── WELCOME ── */
+#welcome{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;
+  background-image:radial-gradient(ellipse 70% 50% at 50% 40%,rgba(200,241,53,0.04) 0%,transparent 70%)}
+.wc-inner{max-width:480px;width:100%;text-align:center}
+.wc-logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:36px}
+.wc-logo img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.wc-logo-name{font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em}
+.wc-badge{display:inline-flex;align-items:center;gap:7px;background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:100px;padding:5px 14px;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:22px}
+.wc-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+.wc-inner h1{font-family:'Sora',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;letter-spacing:-.04em;line-height:1.15;margin-bottom:14px}
+.wc-inner h1 em{font-style:italic;font-weight:300;color:rgba(255,255,255,.38)}
+.wc-sub{color:var(--muted);font-size:.9375rem;line-height:1.72;margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto}
+.wc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:14px;overflow:hidden;border:1px solid var(--border);margin-bottom:28px}
+.wc-stat{background:var(--card);padding:16px 12px;text-align:center}
+.wc-stat-n{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:var(--lime);letter-spacing:-.04em}
+.wc-stat-l{font-size:.7rem;color:var(--muted);margin-top:2px}
+.wc-btn{width:100%;padding:15px;background:var(--lime);color:#05060E;font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;border:none;border-radius:12px;cursor:pointer;transition:opacity .15s,transform .1s;letter-spacing:-.01em}
+.wc-btn:hover{opacity:.9;transform:translateY(-1px)}
+.wc-btn:active{transform:translateY(0)}
+.wc-note{font-size:.73rem;color:var(--dim);margin-top:12px}
+
+/* ── SHELL ── */
+#shell{display:flex;flex-direction:column;height:100vh;opacity:0;transition:opacity .4s}
+#shell.vis{opacity:1}
+
+/* ── TOPBAR ── */
+.topbar{height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0;background:rgba(5,6,14,.95);backdrop-filter:blur(16px);position:relative;z-index:10}
+.tb-logo{display:flex;align-items:center;gap:10px}
+.tb-logo img{width:28px;height:28px;border-radius:6px;object-fit:cover}
+.tb-name{font-family:'Sora',sans-serif;font-weight:800;font-size:1rem;letter-spacing:-.03em}
+.tb-tag{font-size:.63rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:100px;padding:3px 9px;margin-left:2px}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-link{font-size:.78rem;color:var(--muted);text-decoration:none;transition:color .15s;padding:6px 10px}
+.tb-link:hover{color:var(--text)}
+.btn-cal{display:inline-flex;align-items:center;gap:6px;background:var(--lime);color:#05060E;font-weight:700;font-size:.78rem;padding:8px 16px;border-radius:8px;text-decoration:none;transition:opacity .15s}
+.btn-cal:hover{opacity:.88}
+.btn-share{display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border2);color:var(--muted);font-size:.75rem;font-weight:500;padding:7px 12px;border-radius:8px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.btn-share:hover{border-color:var(--border);color:var(--text)}
+.copied{color:var(--lime)!important;border-color:var(--lime-border)!important}
+
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;min-height:0}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;overflow-x:hidden}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.sib-section{padding:16px 14px 4px}
+.sib-label{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:0 4px;margin-bottom:4px}
+.sib-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:.8rem;color:var(--muted);background:none;border:none;cursor:pointer;text-align:left;width:100%;transition:all .15s;font-family:'Inter',sans-serif;line-height:1.3}
+.sib-btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.sib-btn.active{background:var(--lime-bg);color:var(--lime)}
+.sib-ic{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.sib-btn.active .sib-ic{background:rgba(200,241,53,.1)}
+.sib-divider{height:1px;background:var(--border);margin:10px 14px}
+/* progress tracker */
+.progress-wrap{padding:14px 18px;border-top:1px solid var(--border);margin-top:auto}
+.progress-label{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.topic-chips{display:flex;flex-wrap:wrap;gap:5px}
+.topic-chip{font-size:.68rem;padding:3px 9px;border-radius:100px;background:var(--card2);border:1px solid var(--border2);color:var(--dim);transition:all .3s}
+.topic-chip.covered{background:rgba(200,241,53,.08);border-color:var(--lime-border);color:var(--lime)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* ── CHAT SCROLL ── */
+.chat{flex:1;overflow-y:auto;padding:28px 36px 16px;display:flex;flex-direction:column;gap:18px}
+.chat::-webkit-scrollbar{width:4px}
+.chat::-webkit-scrollbar-track{background:transparent}
+.chat::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── MESSAGES ── */
+.msg{display:flex;gap:11px;animation:msgIn .28s cubic-bezier(.4,0,.2,1)}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{justify-content:flex-end}
+.av{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;letter-spacing:.03em}
+.msg.ai .av{background:var(--lime);color:#05060E}
+.msg.user .av{background:var(--card2);border:1px solid var(--border2);color:var(--muted)}
+.bubble{background:var(--card);border:1px solid var(--border);border-radius:0 14px 14px 14px;padding:13px 16px;font-size:.875rem;line-height:1.74;color:var(--text);max-width:620px;word-break:break-word}
+.msg.user .bubble{background:var(--card2);border-color:var(--border2);border-radius:14px 0 14px 14px}
+.bubble p{margin-bottom:.65rem}
+.bubble p:last-child{margin-bottom:0}
+.bubble strong{color:#fff;font-weight:600}
+.bubble em{color:rgba(255,255,255,.7);font-style:italic}
+.bubble a{color:var(--lime);text-decoration:underline;text-underline-offset:3px}
+.bubble ul,.bubble ol{margin:.4rem 0 .7rem 1.25rem}
+.bubble li{margin-bottom:.3rem;color:#C5C8DC}
+.bubble h3{font-family:'Sora',sans-serif;font-size:.9rem;font-weight:700;color:#fff;margin:.8rem 0 .3rem}
+.bubble code{background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1px 6px;font-size:.8em;font-family:'Courier New',monospace;color:var(--lime)}
+.bubble hr{border:none;border-top:1px solid var(--border2);margin:.8rem 0}
+
+/* typing */
+.typing{display:inline-flex;gap:4px;align-items:center;height:20px}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:td .85s infinite}
+.typing span:nth-child(2){animation-delay:.14s}
+.typing span:nth-child(3){animation-delay:.28s}
+@keyframes td{0%,60%,100%{opacity:.25;transform:scale(.75)}30%{opacity:1;transform:scale(1)}}
+
+/* streaming cursor */
+.cursor{display:inline-block;width:2px;height:1em;background:var(--lime);border-radius:1px;animation:blink .8s step-end infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── PROJECT CARDS ── */
+.proj-card{display:flex;align-items:center;gap:14px;background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:12px 14px;margin:.6rem 0;text-decoration:none;transition:all .2s;animation:msgIn .3s ease}
+.proj-card:hover{border-color:var(--border);background:var(--card3);transform:translateY(-1px)}
+.proj-thumb{width:52px;height:38px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--card3)}
+.proj-info{}
+.proj-name{font-weight:600;font-size:.84rem;color:#fff;margin-bottom:2px}
+.proj-tag{font-size:.7rem;color:var(--muted)}
+.proj-result{display:inline-block;font-size:.68rem;font-weight:600;color:var(--lime);background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:4px;padding:1px 8px;margin-top:4px}
+
+/* chips */
+.chips-row{display:flex;flex-wrap:wrap;gap:7px;padding-left:43px;margin-top:-6px;animation:msgIn .3s ease}
+.chip{background:var(--card);border:1px solid var(--border2);border-radius:100px;padding:6px 14px;font-size:.78rem;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'Inter',sans-serif}
+.chip:hover{border-color:var(--lime);color:var(--lime);background:var(--lime-bg)}
+
+/* ── INPUT ── */
+.input-area{border-top:1px solid var(--border);padding:14px 36px;background:var(--bg);flex-shrink:0}
+.input-row{display:flex;gap:9px;align-items:flex-end;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:10px 12px;transition:border-color .2s}
+.input-row:focus-within{border-color:rgba(200,241,53,.35)}
+#inp{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'Inter',sans-serif;font-size:.9rem;resize:none;min-height:22px;max-height:130px;line-height:1.55}
+#inp::placeholder{color:var(--dim)}
+.send{width:34px;height:34px;border-radius:9px;background:var(--lime);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;align-self:flex-end}
+.send:hover{opacity:.85}
+.send:disabled{opacity:.3;cursor:not-allowed}
+.send svg{width:15px;height:15px;fill:#05060E}
+
+/* ── RESPONSIVE ── */
+@media(max-width:820px){
+  .sidebar{display:none}
+  .chat{padding:20px 18px}
+  .input-area{padding:12px 18px}
+  .topbar{padding:0 18px}
+  .tb-tag,.btn-share{display:none}
+}
+@media(max-width:480px){
+  .bubble{font-size:.84rem}
+  .wc-stats{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div id="welcome">
+  <div class="wc-inner">
+    <div class="wc-logo">
+      <img src="https://5ivenodes.com/images/logo.jpg" alt="FiveNodes"/>
+      <span class="wc-logo-name">FiveNodes</span>
+    </div>
+    <div class="wc-badge"><span class="wc-dot"></span>Interactive Company Profile</div>
+    <h1>Meet your next <em>engineering</em> partner</h1>
+    <p class="wc-sub">Ask anything. Our AI guide will walk you through our services, past work, and how we can help you — personalised to what you need.</p>
+    <div class="wc-stats">
+      <div class="wc-stat"><div class="wc-stat-n">50+</div><div class="wc-stat-l">Products shipped</div></div>
+      <div class="wc-stat"><div class="wc-stat-n">20+</div><div class="wc-stat-l">Engineers</div></div>
+      <div class="wc-stat"><div class="wc-stat-n">8+</div><div class="wc-stat-l">Industries served</div></div>
+    </div>
+    <button class="wc-btn" id="startBtn">Start the conversation →</button>
+    <div class="wc-note">Powered by Claude AI · Takes 30 seconds to get started</div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div id="shell">
+  <div class="topbar">
+    <div class="tb-logo">
+      <img src="https://5ivenodes.com/images/logo.jpg" alt="FiveNodes"/>
+      <span class="tb-name">FiveNodes</span>
+      <span class="tb-tag">AI Profile</span>
+    </div>
+    <div class="tb-right">
+      <button class="btn-share" id="shareBtn" onclick="shareLink()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+      <a href="https://5ivenodes.com" target="_blank" class="tb-link">Website ↗</a>
+      <a href="https://calendly.com/sabee-5ivenodes/30min" target="_blank" class="btn-cal">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book a call
+      </a>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sib-section">
+        <div class="sib-label">Quick explore</div>
+        <button class="sib-btn" onclick="quick('Tell me about FiveNodes — who you are and what you do.')"><span class="sib-ic">🏢</span>About FiveNodes</button>
+        <button class="sib-btn" onclick="quick('Walk me through your services.')"><span class="sib-ic">⚙️</span>Services</button>
+        <button class="sib-btn" onclick="quick('Show me your portfolio — past projects and results.')"><span class="sib-ic">💼</span>Portfolio & Work</button>
+        <button class="sib-btn" onclick="quick('What AI capabilities does FiveNodes have?')"><span class="sib-ic">🤖</span>AI Capabilities</button>
+        <button class="sib-btn" onclick="quick('Share your best case studies and results.')"><span class="sib-ic">📊</span>Case Studies</button>
+      </div>
+      <div class="sib-divider"></div>
+      <div class="sib-section">
+        <div class="sib-label">By industry</div>
+        <button class="sib-btn" onclick="quick('What fintech experience does FiveNodes have?')"><span class="sib-ic">💳</span>Fintech</button>
+        <button class="sib-btn" onclick="quick('What have you built for healthcare clients?')"><span class="sib-ic">🏥</span>Healthcare</button>
+        <button class="sib-btn" onclick="quick('Tell me about your IoT and connected device work.')"><span class="sib-ic">📡</span>IoT & Hardware</button>
+        <button class="sib-btn" onclick="quick('What SaaS products have you built?')"><span class="sib-ic">☁️</span>SaaS Products</button>
+        <button class="sib-btn" onclick="quick('Do you have HR tech or recruitment software experience?')"><span class="sib-ic">👥</span>HR Tech</button>
+        <button class="sib-btn" onclick="quick('What e-commerce work have you done?')"><span class="sib-ic">🛒</span>E-commerce</button>
+        <button class="sib-btn" onclick="quick('Any logistics or supply chain experience?')"><span class="sib-ic">🚚</span>Logistics</button>
+      </div>
+      <div class="sib-divider"></div>
+      <div class="sib-section">
+        <div class="sib-label">Working together</div>
+        <button class="sib-btn" onclick="quick('How does your development process work, step by step?')"><span class="sib-ic">🗺️</span>Our Process</button>
+        <button class="sib-btn" onclick="quick('What are the pricing and engagement models?')"><span class="sib-ic">💰</span>Pricing & Models</button>
+        <button class="sib-btn" onclick="quick('What technologies does FiveNodes specialise in?')"><span class="sib-ic">🔧</span>Tech Stack</button>
+        <button class="sib-btn" onclick="quick('How do I get started or book a discovery call?')"><span class="sib-ic">📅</span>Get Started</button>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">Topics covered</div>
+        <div class="topic-chips">
+          <span class="topic-chip" id="tp-about">About</span>
+          <span class="topic-chip" id="tp-services">Services</span>
+          <span class="topic-chip" id="tp-portfolio">Portfolio</span>
+          <span class="topic-chip" id="tp-ai">AI</span>
+          <span class="topic-chip" id="tp-process">Process</span>
+          <span class="topic-chip" id="tp-pricing">Pricing</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CHAT -->
+    <main class="main">
+      <div class="chat" id="chat"></div>
+      <div class="input-area">
+        <div class="input-row">
+          <textarea id="inp" placeholder="Ask anything about FiveNodes…" rows="1"></textarea>
+          <button class="send" id="sendBtn" onclick="send()">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ── PROJECT DATA ──
+const PROJECTS = {
+  recruitly:     { name:'Recruitly',     tag:'HR Tech · SaaS · UK',                result:'40% faster time-to-hire',        img:'https://5ivenodes.com/images/portfolio/recruitly.png' },
+  numerico:      { name:'Numerico',      tag:'Fintech · Investment Analytics',      result:'Real-time portfolio tracking',   img:'https://5ivenodes.com/images/portfolio/numerico.png' },
+  cheetay:       { name:'Cheetay',       tag:'Logistics · Delivery Platform',       result:'10,000+ orders/day',             img:'https://5ivenodes.com/images/portfolio/cheetay.png' },
+  neuraldesk:    { name:'NeuralDesk',    tag:'AI · Customer Support · SaaS',        result:'80% tickets auto-resolved',      img:'https://5ivenodes.com/images/portfolio/neuraldesk.png' },
+  clinicflow:    { name:'ClinicFlow',    tag:'Healthcare · Clinic Management',      result:'HIPAA-compliant platform',       img:'https://5ivenodes.com/images/portfolio/clinicflow.png' },
+  everest:       { name:'Everest',       tag:'Enterprise SaaS · Multi-tenant',      result:'Scaled B2B platform',            img:'https://5ivenodes.com/images/portfolio/everest.png' },
+  kashat:        { name:'Kashat',        tag:'Fintech · Microloans',               result:'Real-time loan decisioning',     img:'https://5ivenodes.com/images/portfolio/kashat.png' },
+  parwaz:        { name:'Parwaz',        tag:'Logistics · Fleet Tracking',          result:'Live GPS + driver apps',         img:'https://5ivenodes.com/images/portfolio/parwaz.png' },
+  'primal plunge':{ name:'Primal Plunge', tag:'IoT · Wellness · Tuya',             result:'Real-time chiller control',      img:'https://5ivenodes.com/images/portfolio/primal-plunge.png' },
+  cayka:         { name:'Cayka',         tag:'IoT · Smart Home · UK',              result:'Full home automation platform',  img:'https://5ivenodes.com/images/portfolio/cayka.png' },
+  sajilni:       { name:'Sajilni',       tag:'Event Tech · Middle East',            result:'Ticketing at scale',             img:'https://5ivenodes.com/images/portfolio/sajilni.png' },
+  'anne barge':  { name:'Anne Barge',    tag:'Luxury Retail · E-commerce · US',    result:'Premium digital storefront',     img:'https://5ivenodes.com/images/portfolio/anne-barge.png' },
+  'esg roadmap': { name:'ESG Roadmap',   tag:'Sustainability · Enterprise SaaS',   result:'Compliance reporting platform',  img:'https://5ivenodes.com/images/portfolio/esg-roadmap.png' },
+  finqalab:      { name:'FinQalab',      tag:'Fintech · EdTech · Gamified',        result:'Live market data platform',      img:'https://5ivenodes.com/images/portfolio/finqalab.png' },
+  syncona:       { name:'Syncona',       tag:'Biotech · Investment Management',    result:'Portfolio reporting platform',   img:'https://5ivenodes.com/images/portfolio/syncona.png' },
+  ullmanna:      { name:'Ullmanna',      tag:'Fashion E-commerce · Scandinavia',   result:'Full warehouse integration',     img:'https://5ivenodes.com/images/portfolio/ullmanna.png' },
+};
+
+const TOPIC_KEYWORDS = {
+  'tp-about':    ['fivenodes','who we are','company','team','based','founded'],
+  'tp-services': ['service','build','engineer','cloud','devops','api','design','data','iot','maintenance'],
+  'tp-portfolio':['portfolio','project','built','work','case','cheetay','recruitly','numerico','kashat','primal','cayka'],
+  'tp-ai':       ['ai','llm','artificial','machine learning','rag','chatbot','agent','openai','anthropic','neural'],
+  'tp-process':  ['process','how do you','sprint','timeline','week','discover','design'],
+  'tp-pricing':  ['price','pricing','cost','budget','rate','engagement','retainer','$','usd'],
+};
+
+// ── STATE ──
+const history = [];
+let busy = false;
+const shownCards = new Set();
+
+// ── START ──
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('welcome').style.opacity = '0';
+  document.getElementById('welcome').style.pointerEvents = 'none';
+  setTimeout(() => {
+    document.getElementById('welcome').style.display = 'none';
+    document.getElementById('shell').classList.add('vis');
+  }, 300);
+  addAI(
+    "**Hi there, welcome to FiveNodes!** 👋\n\nI'm Alex — I'll walk you through who we are, what we've built, and how we work. No slides, no fluff — just what's relevant to you.\n\n**What brings you here today?** Even a few words helps me tailor this to what you actually need.",
+    ['We need to build a SaaS product','Looking for an AI development partner','Curious about your past work','Need a team to scale our product','Just exploring FiveNodes']
+  );
+});
+
+// ── SEND ──
+async function send() {
+  const el = document.getElementById('inp');
+  const txt = el.value.trim();
+  if (!txt || busy) return;
+  el.value = ''; el.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+  busy = true;
+  document.querySelectorAll('.chips-row').forEach(c => c.remove());
+
+  addUser(txt);
+  history.push({ role:'user', content:txt });
+
+  // typing indicator
+  const typingId = 'typing-' + Date.now();
+  addTyping(typingId);
+
+  // call streaming API
+  let fullText = '';
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body: JSON.stringify({ messages: history }),
+    });
+
+    if (!res.ok || !res.body) throw new Error('Request failed');
+
+    removeEl(typingId);
+    const bubbleId = 'bubble-' + Date.now();
+    const bubble = addStreamBubble(bubbleId);
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop() ?? '';
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (raw === '[DONE]') continue;
+        try {
+          const ev = JSON.parse(raw);
+          if (ev.text) { fullText += ev.text; updateStream(bubbleId, fullText); }
+        } catch {}
+      }
+    }
+    finaliseStream(bubbleId, fullText);
+    history.push({ role:'assistant', content:fullText });
+
+    // inject project cards
+    injectCards(bubbleId, fullText);
+    // update topic tracker
+    updateTopics(fullText);
+    // generate contextual chips
+    generateChips(fullText);
+
+  } catch (e) {
+    removeEl(typingId);
+    addAI("Sorry, I couldn't connect right now. Please try again or [book a call directly](https://calendly.com/sabee-5ivenodes/30min).");
+  }
+
+  busy = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function quick(text) {
+  document.getElementById('inp').value = text;
+  send();
+}
+
+// ── RENDER ──
+function addUser(text) {
+  const d = document.createElement('div');
+  d.className = 'msg user';
+  d.innerHTML = `<div class="bubble">${esc(text)}</div><div class="av">You</div>`;
+  chat().appendChild(d);
+  scrollBot();
+}
+
+function addAI(md, chips) {
+  const d = document.createElement('div');
+  d.className = 'msg ai';
+  d.innerHTML = `<div class="av">AI</div><div class="bubble">${render(md)}</div>`;
+  chat().appendChild(d);
+  if (chips) showChips(chips);
+  scrollBot();
+}
+
+function addTyping(id) {
+  const d = document.createElement('div');
+  d.className = 'msg ai'; d.id = id;
+  d.innerHTML = `<div class="av">AI</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  chat().appendChild(d);
+  scrollBot();
+}
+
+function addStreamBubble(id) {
+  const d = document.createElement('div');
+  d.className = 'msg ai';
+  d.innerHTML = `<div class="av">AI</div><div class="bubble" id="${id}"><span class="cursor"></span></div>`;
+  chat().appendChild(d);
+  scrollBot();
+  return document.getElementById(id);
+}
+
+function updateStream(id, text) {
+  const el = document.getElementById(id) || id;
+  if (el) { el.innerHTML = render(text) + '<span class="cursor"></span>'; scrollBot(); }
+}
+
+function finaliseStream(id, text) {
+  const el = document.getElementById(id) || id;
+  if (el) el.innerHTML = render(text);
+}
+
+function showChips(chips) {
+  const row = document.createElement('div');
+  row.className = 'chips-row';
+  chips.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = c;
+    b.onclick = () => { row.remove(); document.getElementById('inp').value = c; send(); };
+    row.appendChild(b);
+  });
+  chat().appendChild(row);
+  scrollBot();
+}
+
+function generateChips(text) {
+  const lower = text.toLowerCase();
+  let chips = [];
+  if (lower.includes('service') || lower.includes('build'))
+    chips = ['Show me relevant case studies','What does the process look like?','What are your pricing models?'];
+  else if (lower.includes('process') || lower.includes('sprint'))
+    chips = ['What engagement models do you offer?','How long does an MVP take?','How do we get started?'];
+  else if (lower.includes('pric') || lower.includes('cost') || lower.includes('budget'))
+    chips = ['Book a discovery call','Tell me more about the dedicated team model','What\'s included in the MVP package?'];
+  else if (lower.includes('ai') || lower.includes('llm') || lower.includes('agent'))
+    chips = ['Show me AI projects you\'ve shipped','What AI stack do you use?','How do you approach AI integration?'];
+  else if (lower.includes('portfolio') || lower.includes('project') || lower.includes('built'))
+    chips = ['Tell me about your fintech work','What\'s your most complex project?','Show me healthcare or SaaS work'];
+  if (chips.length) showChips(chips);
+}
+
+// ── PROJECT CARDS ──
+function injectCards(bubbleEl, text) {
+  const lower = text.toLowerCase();
+  const found = [];
+  for (const [key, proj] of Object.entries(PROJECTS)) {
+    if (lower.includes(key) && !shownCards.has(key)) {
+      found.push({ key, proj });
+      shownCards.add(key);
+    }
+  }
+  if (!found.length) return;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'padding-left:43px;display:flex;flex-direction:column;gap:7px';
+  found.forEach(({ proj }) => {
+    const a = document.createElement('a');
+    a.className = 'proj-card';
+    a.href = 'https://5ivenodes.com/portfolio/';
+    a.target = '_blank';
+    a.innerHTML = `
+      <img class="proj-thumb" src="${proj.img}" alt="${proj.name}" onerror="this.style.display='none'">
+      <div class="proj-info">
+        <div class="proj-name">${proj.name}</div>
+        <div class="proj-tag">${proj.tag}</div>
+        <span class="proj-result">✓ ${proj.result}</span>
+      </div>`;
+    wrap.appendChild(a);
+  });
+  chat().appendChild(wrap);
+  scrollBot();
+}
+
+// ── TOPIC TRACKER ──
+function updateTopics(text) {
+  const lower = text.toLowerCase();
+  for (const [id, kws] of Object.entries(TOPIC_KEYWORDS)) {
+    if (kws.some(k => lower.includes(k))) {
+      document.getElementById(id)?.classList.add('covered');
+    }
+  }
+}
+
+// ── HELPERS ──
+function chat() { return document.getElementById('chat'); }
+function scrollBot() {
+  const c = chat();
+  setTimeout(() => c.scrollTo({ top: c.scrollHeight, behavior:'smooth' }), 40);
+}
+function removeEl(id) { document.getElementById(id)?.remove(); }
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/\n/g,'<br>');
+}
+function render(md) {
+  return md
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*\n]+?)\*/g,'<em>$1</em>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^---$/gm,'<hr>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)+/g, m => '<ul>' + m + '</ul>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>')
+    .replace(/^(?!<[hup])/,'<p>')
+    .replace(/([^>])$/,'$1</p>')
+    .replace(/<p><\/p>/g,'')
+    .replace(/<p>(<[hul])/g,'$1')
+    .replace(/(<\/[hul][^>]*>)<\/p>/g,'$1');
+}
+
+// ── KEYBOARD ──
+document.getElementById('inp').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+document.getElementById('inp').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+});
+
+// ── SHARE ──
+function shareLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = document.getElementById('shareBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share`;
+    }, 2500);
+  });
+}
+</script>
+</body>
+</html>
