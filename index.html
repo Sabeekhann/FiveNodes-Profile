@@ -814,23 +814,66 @@ function addStreamBubble(id) {
   d.innerHTML = `${AI_AV}<div class="bubble" id="${id}"><span class="cursor"></span></div>`;
   chat().appendChild(d);
   scrollBot();
+  initTypewriter(id);
   return document.getElementById(id);
 }
 
-function updateStream(id, text) {
-  const el = document.getElementById(id) || id;
-  if (el) { el.innerHTML = render(text) + '<span class="cursor"></span>'; scrollBot(); }
+// Typewriter queue — smooth character drip
+let _twQueue = '';
+let _twDisplayed = '';
+let _twId = null;
+let _twRaf = null;
+let _twDone = false;
+const TW_SPEED = 18; // chars per frame (~16ms = ~1100 cps, feels natural)
+
+function _twTick() {
+  if (!_twId) return;
+  const el = document.getElementById(_twId);
+  if (!el) return;
+  if (_twQueue.length > 0) {
+    const take = Math.min(TW_SPEED, _twQueue.length);
+    _twDisplayed += _twQueue.slice(0, take);
+    _twQueue = _twQueue.slice(take);
+    el.innerHTML = render(_twDisplayed) + (_twDone && _twQueue.length === 0 ? '' : '<span class="cursor"></span>');
+    scrollBot();
+  }
+  if (!_twDone || _twQueue.length > 0) {
+    _twRaf = requestAnimationFrame(_twTick);
+  }
+}
+
+function initTypewriter(id) {
+  _twId = id; _twQueue = ''; _twDisplayed = ''; _twDone = false;
+  if (_twRaf) cancelAnimationFrame(_twRaf);
+  _twRaf = requestAnimationFrame(_twTick);
+}
+
+function updateStream(id, fullText) {
+  // Feed only NEW characters into the queue
+  const newChars = fullText.slice(_twDisplayed.length + _twQueue.length);
+  if (newChars) _twQueue += newChars;
 }
 
 function finaliseStream(id, text) {
-  const el = document.getElementById(id) || id;
-  if (!el) return;
-  el.style.transition = 'opacity .18s ease';
-  el.style.opacity = '0.4';
-  requestAnimationFrame(() => {
-    el.innerHTML = render(text);
-    requestAnimationFrame(() => { el.style.opacity = '1'; });
-  });
+  _twDone = true;
+  // Drain remaining queue, then do a clean final render
+  const drain = () => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (_twQueue.length > 0) {
+      const take = Math.min(TW_SPEED * 2, _twQueue.length);
+      _twDisplayed += _twQueue.slice(0, take);
+      _twQueue = _twQueue.slice(take);
+      el.innerHTML = render(_twDisplayed) + (_twQueue.length > 0 ? '<span class="cursor"></span>' : '');
+      scrollBot();
+      requestAnimationFrame(drain);
+    } else {
+      el.innerHTML = render(text);
+      scrollBot();
+    }
+  };
+  if (_twRaf) cancelAnimationFrame(_twRaf);
+  drain();
 }
 
 function showChips(chips) {
