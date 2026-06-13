@@ -75,7 +75,7 @@ PORTFOLIO PROJECTS
 
 - **Recruitly** — UK recruitment CRM SaaS. Candidate pipeline, email automation, job board integrations, recruiter analytics. Result: 40% faster time-to-hire, 3× recruiter capacity.
 - **Numerico** — Financial analytics and portfolio management platform for investment firms. Real-time market data feeds, custom reporting, risk dashboards.
-- **Cheetay** — Pakistan's leading fast-delivery platform. Merchant dashboard, driver app backend, real-time order management, geo-routing. Result: 10,000+ daily orders, 99.9% uptime.
+- **Cheetay** — Top-rated fast-delivery platform (Middle East & South Asia). Merchant dashboard, driver app backend, real-time order management, geo-routing. Result: 10,000+ daily orders, 99.9% uptime.
 - **NeuralDesk** — AI-powered customer support platform using RAG + fine-tuned LLM. Ingests knowledge bases, resolves tickets automatically. Result: 80% of tickets auto-resolved, zero human touch.
 - **ClinicFlow** — Clinic and hospital management SaaS: patient records (EHR), appointment scheduling, billing, insurance claims. HIPAA-compliant architecture.
 - **Everest** — Enterprise SaaS with complex multi-tenant architecture, role-based access, white-labelling, and enterprise reporting.
@@ -399,7 +399,7 @@ const server = http.createServer(async (req, res) => {
             try {
               const ev = JSON.parse(raw);
               if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
-                res.write(`data: ${JSON.stringify({ text: ev.delta.text })}\n\n`);
+                const clean = ev.delta.text.replace(/—/g, " ").replace(/\s{2,}/g, " "); res.write(`data: ${JSON.stringify({ text: clean })}\n\n`);
               }
             } catch {}
           }

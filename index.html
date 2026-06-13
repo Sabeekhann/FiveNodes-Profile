@@ -6,13 +6,13 @@
 <title>FiveNodes AI Profile — Meet Your Next Engineering Partner</title>
 <meta name="description" content="Explore FiveNodes interactively. Ask our AI guide about services, portfolio, process, and how we can help you build your next product."/>
 <meta property="og:title" content="FiveNodes — Interactive Company Profile"/>
-<meta property="og:description" content="Ask our AI guide anything about FiveNodes. Services, portfolio, process, pricing models — all in one conversation."/>
+<meta property="og:description" content="Ask our AI guide anything about FiveNodes. Services, portfolio, process, and pricing models. All in one conversation"/>
 <meta property="og:image" content="https://five-nodes-profile.vercel.app/images/og-default.png"/>
 <meta property="og:url" content="https://five-nodes-profile.vercel.app"/>
 <meta property="og:type" content="website"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="FiveNodes — Interactive Company Profile"/>
-<meta name="twitter:description" content="Ask our AI guide anything about FiveNodes. Services, portfolio, process, pricing models — all in one conversation."/>
+<meta name="twitter:description" content="Ask our AI guide anything about FiveNodes. Services, portfolio, process, and pricing models. All in one conversation"/>
 <meta name="twitter:image" content="https://five-nodes-profile.vercel.app/images/og-default.png"/>
 <link rel="icon" type="image/png" sizes="32x32" href="https://5ivenodes.com/images/favicon-32.png"/>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -825,7 +825,7 @@ let _twId = null;
 let _twRaf = null;
 let _twDone = false;
 let _twFinalText = '';
-const TW_CHARS = 6; // chars per frame at 60fps ≈ natural reading pace
+const TW_CHARS = 4; // chars per frame — smooth, readable pace
 
 function _twTick() {
   if (!_twId) return;
@@ -839,14 +839,18 @@ function _twTick() {
     const finished = _twDone && _twQueue.length === 0;
     el.innerHTML = render(_twDisplayed) + (finished ? '' : '<span class="cursor"></span>');
     scrollBot();
-    // silent clean render once fully drained
-    if (finished && _twFinalText) {
-      el.innerHTML = render(_twFinalText);
-      scrollBot();
-    }
   }
 
-  _twRaf = (_twDone && _twQueue.length === 0) ? null : requestAnimationFrame(_twTick);
+  if (_twDone && _twQueue.length === 0) {
+    // Queue fully drained — do one silent final render and stop
+    if (_twFinalText) {
+      const el2 = document.getElementById(_twId);
+      if (el2) el2.innerHTML = render(_twFinalText);
+    }
+    _twRaf = null;
+  } else {
+    _twRaf = requestAnimationFrame(_twTick);
+  }
 }
 
 function initTypewriter(id) {
@@ -969,6 +973,8 @@ function render(md) {
     .replace(/^### (.+)$/gm,'<h3>$1</h3>')
     .replace(/^## (.+)$/gm,'<h3>$1</h3>')
     .replace(/^---+$/gm,'')
+    .replace(/—/g,' ')
+    .replace(/\s{2,}/g,' ')
     .replace(/^- (.+)$/gm,'<li>$1</li>')
     .replace(/(<li>[\s\S]*?<\/li>)+/g, m => '<ul>' + m + '</ul>')
     .replace(/\n\n/g,'</p><p>')
