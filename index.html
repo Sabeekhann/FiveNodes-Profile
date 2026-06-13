@@ -385,22 +385,25 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 <script>
 // ── PROJECT DATA ──
 const PROJECTS = {
-  recruitly:     { name:'Recruitly',     tag:'HR Tech · SaaS · UK',                result:'40% faster time-to-hire',        img:'https://5ivenodes.com/images/portfolio/recruitly.png' },
-  numerico:      { name:'Numerico',      tag:'Fintech · Investment Analytics',      result:'Real-time portfolio tracking',   img:'https://5ivenodes.com/images/portfolio/numerico.png' },
-  cheetay:       { name:'Cheetay',       tag:'Logistics · Delivery Platform',       result:'10,000+ orders/day',             img:'https://5ivenodes.com/images/portfolio/cheetay.png' },
-  neuraldesk:    { name:'NeuralDesk',    tag:'AI · Customer Support · SaaS',        result:'80% tickets auto-resolved',      img:'https://5ivenodes.com/images/portfolio/neuraldesk.png' },
-  clinicflow:    { name:'ClinicFlow',    tag:'Healthcare · Clinic Management',      result:'HIPAA-compliant platform',       img:'https://5ivenodes.com/images/portfolio/clinicflow.png' },
-  everest:       { name:'Everest',       tag:'Enterprise SaaS · Multi-tenant',      result:'Scaled B2B platform',            img:'https://5ivenodes.com/images/portfolio/everest.png' },
-  kashat:        { name:'Kashat',        tag:'Fintech · Microloans',               result:'Real-time loan decisioning',     img:'https://5ivenodes.com/images/portfolio/kashat.png' },
-  parwaz:        { name:'Parwaz',        tag:'Logistics · Fleet Tracking',          result:'Live GPS + driver apps',         img:'https://5ivenodes.com/images/portfolio/parwaz.png' },
-  'primal plunge':{ name:'Primal Plunge', tag:'IoT · Wellness · Tuya',             result:'Real-time chiller control',      img:'https://5ivenodes.com/images/portfolio/primal-plunge.png' },
-  cayka:         { name:'Cayka',         tag:'IoT · Smart Home · UK',              result:'Full home automation platform',  img:'https://5ivenodes.com/images/portfolio/cayka.png' },
-  sajilni:       { name:'Sajilni',       tag:'Event Tech · Middle East',            result:'Ticketing at scale',             img:'https://5ivenodes.com/images/portfolio/sajilni.png' },
-  'anne barge':  { name:'Anne Barge',    tag:'Luxury Retail · E-commerce · US',    result:'Premium digital storefront',     img:'https://5ivenodes.com/images/portfolio/anne-barge.png' },
-  'esg roadmap': { name:'ESG Roadmap',   tag:'Sustainability · Enterprise SaaS',   result:'Compliance reporting platform',  img:'https://5ivenodes.com/images/portfolio/esg-roadmap.png' },
-  finqalab:      { name:'FinQalab',      tag:'Fintech · EdTech · Gamified',        result:'Live market data platform',      img:'https://5ivenodes.com/images/portfolio/finqalab.png' },
-  syncona:       { name:'Syncona',       tag:'Biotech · Investment Management',    result:'Portfolio reporting platform',   img:'https://5ivenodes.com/images/portfolio/syncona.png' },
-  ullmanna:      { name:'Ullmanna',      tag:'Fashion E-commerce · Scandinavia',   result:'Full warehouse integration',     img:'https://5ivenodes.com/images/portfolio/ullmanna.png' },
+  recruitly:        { name:'Recruitly',          tag:'HR Tech · SaaS · UK',                result:'40% faster time-to-hire',        img:'https://5ivenodes.com/images/portfolio/recruitly.png',      url:'https://5ivenodes.com/work/recruitly/' },
+  numerico:         { name:'Numerico',           tag:'Fintech · Investment Analytics',      result:'Real-time portfolio tracking',   img:'https://5ivenodes.com/images/portfolio/numerico.png',       url:'https://5ivenodes.com/portfolio/' },
+  cheetay:          { name:'Cheetay',            tag:'Logistics · Delivery Platform',       result:'10,000+ orders/day',             img:'https://5ivenodes.com/images/portfolio/cheetay.png',        url:'https://5ivenodes.com/portfolio/' },
+  neuraldesk:       { name:'NeuralDesk',         tag:'AI · Customer Support · SaaS',        result:'80% tickets auto-resolved',      img:'https://5ivenodes.com/images/portfolio/neuraldesk.png',     url:'https://5ivenodes.com/neuraldesk/' },
+  clinicflow:       { name:'ClinicFlow',         tag:'Healthcare · Clinic Management',      result:'HIPAA-compliant platform',       img:'https://5ivenodes.com/images/portfolio/clinicflow.png',     url:'https://5ivenodes.com/clinicflow/' },
+  everest:          { name:'Everest',            tag:'Enterprise SaaS · Multi-tenant',      result:'Scaled B2B platform',            img:'https://5ivenodes.com/images/portfolio/everest.png',        url:'https://5ivenodes.com/portfolio/' },
+  kashat:           { name:'Kashat',             tag:'Fintech · Microloans',                result:'Real-time loan decisioning',     img:'https://5ivenodes.com/images/portfolio/kashat.png',         url:'https://5ivenodes.com/portfolio/' },
+  parwaz:           { name:'Parwaz',             tag:'Logistics · Fleet Tracking',          result:'Live GPS + driver apps',         img:'https://5ivenodes.com/images/portfolio/parwaz.png',         url:'https://5ivenodes.com/portfolio/' },
+  'primal plunge':  { name:'Primal Plunge',      tag:'IoT · Wellness · Tuya',               result:'Real-time chiller control',      img:'https://5ivenodes.com/images/portfolio/primal-plunge.png',  url:'https://5ivenodes.com/portfolio/' },
+  cayka:            { name:'Cayka',              tag:'IoT · Smart Home · UK',               result:'Full home automation platform',  img:'https://5ivenodes.com/images/portfolio/cayka.png',          url:'https://5ivenodes.com/portfolio/' },
+  sajilni:          { name:'Sajilni',            tag:'Event Tech · Middle East',            result:'Ticketing at scale',             img:'https://5ivenodes.com/images/portfolio/sajilni.png',        url:'https://5ivenodes.com/portfolio/' },
+  'anne barge':     { name:'Anne Barge',         tag:'Luxury Retail · E-commerce · US',    result:'Premium digital storefront',     img:'https://5ivenodes.com/images/portfolio/anne-barge.png',     url:'https://5ivenodes.com/portfolio/' },
+  'esg roadmap':    { name:'ESG Roadmap',        tag:'Sustainability · Enterprise SaaS',   result:'Compliance reporting platform',  img:'https://5ivenodes.com/images/portfolio/esg-roadmap.png',    url:'https://5ivenodes.com/portfolio/' },
+  finqalab:         { name:'FinQalab',           tag:'Fintech · EdTech · Gamified',        result:'Live market data platform',      img:'https://5ivenodes.com/images/portfolio/finqalab.png',       url:'https://5ivenodes.com/portfolio/' },
+  syncona:          { name:'Syncona',            tag:'Biotech · Investment Management',    result:'Portfolio reporting platform',   img:'https://5ivenodes.com/images/portfolio/syncona.png',        url:'https://5ivenodes.com/portfolio/' },
+  ullmanna:         { name:'Ullmanna',           tag:'Fashion E-commerce · Scandinavia',   result:'Full warehouse integration',     img:'https://5ivenodes.com/images/portfolio/ullmanna.png',       url:'https://5ivenodes.com/portfolio/' },
+  'peace coin':     { name:'Peace Coin',         tag:'Blockchain · Payments · Web3',       result:'On-chain payment platform',      img:'https://5ivenodes.com/images/portfolio/peace-coin.png',     url:'https://5ivenodes.com/portfolio/' },
+  'smarty men':     { name:'Smarty Men',         tag:'Menswear · E-commerce · UK',         result:'Full inventory + returns system', img:'https://5ivenodes.com/images/portfolio/smarty-men.png',    url:'https://5ivenodes.com/portfolio/' },
+  'pak-saudi':      { name:'Pak-Saudi Startup Hub', tag:'GovTech · Startup Ecosystem',    result:'Investor-startup matchmaking platform', img:'https://5ivenodes.com/images/portfolio/pak-saudi.png', url:'https://5ivenodes.com/portfolio/' },
 };
 
 const TOPIC_KEYWORDS = {
@@ -478,10 +481,10 @@ const TECH = {
   ],
   'AI / LLM':    [
     {n:'OpenAI',      i:null, color:'#10A37F'},
-    {n:'Anthropic',   i:null, color:'#C96442'},
     {n:'LangChain',   i:null, color:'#1C3C3C'},
     {n:'Gemini',      i:null, color:'#4285F4'},
     {n:'HuggingFace', i:null, color:'#FFD21E'},
+    {n:'LlamaIndex',  i:null, color:'#563D7C'},
   ],
 };
 
@@ -656,6 +659,7 @@ async function send() {
   el.value = ''; el.style.height = 'auto';
   setBusy(true);
   document.querySelectorAll('.chips-row').forEach(c => c.remove());
+  closeMobileDrawer();
 
   addUser(txt);
   history.push({ role:'user', content:txt });
@@ -712,9 +716,15 @@ async function send() {
         } catch {}
       }
     }
-    finaliseStream(bubbleId, fullText);
-    history.push({ role:'assistant', content:fullText });
-    afterResponse(bubbleId, fullText, txt);
+    if (!fullText) {
+      // empty stream — replace bubble with error
+      removeEl(bubbleId);
+      addAI("Sorry, I didn't get a response. Please try again or [book a call directly](https://calendly.com/sabee-5ivenodes/30min).");
+    } else {
+      finaliseStream(bubbleId, fullText);
+      history.push({ role:'assistant', content:fullText });
+      afterResponse(bubbleId, fullText, txt);
+    }
 
   } catch (e) {
     if (e.name === 'AbortError') {
@@ -724,10 +734,10 @@ async function send() {
         history.push({ role:'assistant', content:fullText });
         afterResponse(bubbleId, fullText, txt);
       } else {
-        removeEl(typingId);
+        removeEl(bubbleId);
       }
     } else {
-      removeEl(typingId);
+      removeEl(bubbleId);
       addAI("Sorry, I couldn't connect right now. Please try again or [book a call directly](https://calendly.com/sabee-5ivenodes/30min).");
     }
   }
@@ -741,20 +751,21 @@ function afterResponse(bubbleId, text, userMsg) {
   const lower = text.toLowerCase();
   const userLower = (userMsg||'').toLowerCase();
   injectCards(bubbleId, text);
-  // inject tech grid when tech stack is discussed
-  if (lower.includes('react') || lower.includes('node') || lower.includes('python') ||
-      lower.includes('tech stack') || lower.includes('technolog') || lower.includes('frontend') ||
-      lower.includes('backend') || lower.includes('cloud') || userLower.includes('tech') ||
-      userLower.includes('stack') || userLower.includes('technolog')) {
-    injectTechGrid();
-  }
-  // inject pricing table when pricing is discussed
-  if (lower.includes('engag') || lower.includes('pric') || lower.includes('model') ||
-      lower.includes('retainer') || lower.includes('dedicated') || lower.includes('fixed') ||
-      userLower.includes('pric') || userLower.includes('cost') || userLower.includes('budget') ||
-      userLower.includes('how much') || userLower.includes('engag')) {
-    injectPricingTable();
-  }
+
+  // inject tech grid only on explicit tech-stack questions
+  const techTriggerUser = userLower.match(/\btech(nolog|[ -]stack)?\b|\bstack\b|\bframework/);
+  const techTriggerAI   = lower.includes('tech stack') || lower.includes('full stack') ||
+                          lower.includes('our stack') || lower.includes('we use react') ||
+                          lower.includes('we use python') || lower.includes('we build with');
+  if (techTriggerUser || techTriggerAI) injectTechGrid();
+
+  // inject pricing table only on explicit pricing/engagement questions
+  const priceTriggerUser = userLower.match(/\bpric|\bcost|\bbudget|\bhow much|\brate\b|\bengagement model|\bretainer\b|\bdedicated team\b|\bfixed.price\b/);
+  const priceTriggerAI   = lower.includes('fixed-price project') || lower.includes('dedicated team') ||
+                           lower.includes('sprint retainer') || lower.includes('technical advisory') ||
+                           lower.includes('engagement model');
+  if (priceTriggerUser || priceTriggerAI) injectPricingTable();
+
   updateTopics(text);
   generateChips(text);
 }
@@ -776,8 +787,16 @@ async function streamText(bubbleId, text) {
 }
 
 function quick(text) {
+  // clear chips and close drawer if open
+  document.querySelectorAll('.chips-row').forEach(c => c.remove());
+  closeMobileDrawer();
   document.getElementById('inp').value = text;
   send();
+}
+
+function setSidebarActive(btn) {
+  document.querySelectorAll('.sib-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
 }
 
 // ── RENDER ──
@@ -915,7 +934,7 @@ function injectCards(bubbleEl, text) {
   found.forEach(({ proj }) => {
     const a = document.createElement('a');
     a.className = 'proj-card';
-    a.href = 'https://5ivenodes.com/portfolio/';
+    a.href = proj.url || 'https://5ivenodes.com/portfolio/';
     a.target = '_blank';
     a.innerHTML = `
       <img class="proj-thumb" src="${proj.img}" alt="${proj.name}" onerror="this.style.display='none'">
@@ -993,19 +1012,20 @@ function initSidebarHints() {
     const first = sec.querySelector('.sib-btn');
     if (first) first.classList.add('hint');
   });
-  // remove hint class + hide guide banner after first sidebar click
+  // active state + remove hints on click
   const guide = document.querySelector('.sib-guide');
   document.querySelectorAll('.sib-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      setSidebarActive(btn);
       document.querySelectorAll('.sib-btn.hint').forEach(b => b.classList.remove('hint'));
       if (guide) { guide.style.transition = 'opacity .4s'; guide.style.opacity = '0'; setTimeout(() => guide.style.display = 'none', 400); }
-    }, { once: false });
+    });
   });
 }
 
 // ── KEYBOARD ──
 document.getElementById('inp').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); setSidebarActive(null); send(); }
 });
 document.getElementById('inp').addEventListener('input', function() {
   this.style.height = 'auto';
