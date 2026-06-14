@@ -670,9 +670,6 @@ function injectPricingTable() {
   scrollBot();
 }
 
-// ── INIT LANGUAGE ──
-applyLanguage();
-
 // ── START ──
 document.getElementById('startBtn').addEventListener('click', () => {
   document.getElementById('welcome').style.opacity = '0';
@@ -1465,6 +1462,9 @@ function shareLink() {
     }, 2500);
   });
 }
+
+// ── INIT LANGUAGE (must be last — depends on TRANSLATIONS const) ──
+applyLanguage();
 </script>
 </body>
 </html>
