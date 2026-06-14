@@ -383,8 +383,13 @@ RESPONSE GUIDELINES — CRITICAL
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { messages } = req.body;
+  const { messages, lang } = req.body;
   if (!messages?.length) return res.status(400).json({ error: 'messages required' });
+
+  const LANG_NAMES = { ar:'Arabic', fr:'French', de:'German', es:'Spanish', zh:'Mandarin Chinese', pt:'Portuguese' };
+  const langInstruction = lang && lang !== 'en' && LANG_NAMES[lang]
+    ? `\n\nCRITICAL: The user has selected ${LANG_NAMES[lang]} as their language. You MUST respond entirely in ${LANG_NAMES[lang]}. All your responses — every word — must be in ${LANG_NAMES[lang]}.`
+    : '';
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set' });
@@ -408,7 +413,7 @@ export default async function handler(req, res) {
         model: 'claude-sonnet-4-6',
         max_tokens: 1024,
         stream: true,
-        system: SYSTEM_PROMPT,
+        system: SYSTEM_PROMPT + langInstruction,
         messages: messages.map(m => ({ role: m.role, content: m.content })),
       }),
     });
