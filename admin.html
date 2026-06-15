@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FiveNodes — Leads Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#05060E;--card:#0D0F1C;--card2:#111325;--border:#1E2035;--text:#E8EAF2;--muted:#8B8FA8;--dim:#454760;--lime:#C8F135;--lime-bg:rgba(200,241,53,0.07);--lime-border:rgba(200,241,53,0.18)}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+.topbar{height:56px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.tb-logo{display:flex;align-items:center;gap:10px}
+.tb-logo img{width:32px;height:32px;border-radius:7px}
+.tb-logo span{font-family:'Sora',sans-serif;font-weight:800;font-size:1rem}
+.tb-badge{background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:6px;padding:3px 10px;font-size:.7rem;font-weight:600;color:var(--lime);letter-spacing:.08em;text-transform:uppercase}
+.main{max-width:1100px;margin:0 auto;padding:32px 24px}
+.page-title{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:4px}
+.page-sub{color:var(--muted);font-size:.875rem;margin-bottom:28px}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;max-width:380px;margin:80px auto}
+.login-card h2{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.login-card p{color:var(--muted);font-size:.85rem;margin-bottom:20px}
+.login-card input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-size:.875rem;color:var(--text);font-family:'Inter',sans-serif;outline:none;margin-bottom:12px}
+.login-card input:focus{border-color:var(--lime-border)}
+.login-card button{width:100%;background:var(--lime);color:#05060E;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:'Sora',sans-serif}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.stat-card .n{font-family:'Sora',sans-serif;font-size:1.8rem;font-weight:800;color:var(--lime)}
+.stat-card .l{font-size:.75rem;color:var(--muted);margin-top:2px}
+.controls{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.search{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:.85rem;color:var(--text);font-family:'Inter',sans-serif;outline:none;width:240px}
+.search:focus{border-color:var(--lime-border)}
+.filter-btn{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:.8rem;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.filter-btn.active,.filter-btn:hover{border-color:var(--lime-border);color:var(--lime)}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:var(--card2);padding:11px 16px;text-align:left;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border)}
+td{padding:13px 16px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.lead-name{font-weight:600;color:var(--text);display:block}
+.lead-email{font-size:.75rem;color:var(--dim)}
+.provider-badge{display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border);border-radius:100px;padding:2px 8px;font-size:.7rem;color:var(--muted)}
+.provider-badge.google{border-color:rgba(66,133,244,.3);color:#4285F4}
+.provider-badge.email{border-color:var(--lime-border);color:var(--lime)}
+.topic-pill{display:inline-block;background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:4px;padding:1px 6px;font-size:.68rem;color:var(--lime);margin:1px 2px 1px 0}
+.msg-count{font-family:'Sora',sans-serif;font-weight:700;color:var(--text)}
+.empty{text-align:center;padding:48px;color:var(--dim)}
+.refresh-btn{margin-left:auto;background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:8px;padding:9px 16px;font-size:.8rem;color:var(--lime);cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;transition:all .15s}
+.refresh-btn:hover{background:rgba(200,241,53,.12)}
+.error-msg{background:rgba(255,77,106,.08);border:1px solid rgba(255,77,106,.2);border-radius:8px;padding:12px 16px;color:#FF4D6A;font-size:.85rem;margin-bottom:16px}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr}.topbar{padding:0 16px}.main{padding:20px 16px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-logo">
+    <img src="https://5ivenodes.com/images/logo.jpg" alt="FiveNodes"/>
+    <span>FiveNodes</span>
+  </div>
+  <div class="tb-badge">Leads Dashboard</div>
+</div>
+
+<div class="main" id="main">
+  <!-- Login form shown until authenticated -->
+  <div class="login-card" id="loginCard">
+    <h2>Admin Access</h2>
+    <p>Enter your admin password to view leads.</p>
+    <input type="password" id="secretInput" placeholder="Admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <div id="loginError" style="color:#FF4D6A;font-size:.8rem;margin-bottom:10px;display:none"></div>
+    <button onclick="doLogin()">Sign in →</button>
+  </div>
+
+  <!-- Dashboard shown after auth -->
+  <div id="dashboard" style="display:none">
+    <div class="page-title">Leads Dashboard</div>
+    <div class="page-sub" id="dashSub">Loading…</div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="controls">
+      <input class="search" type="text" placeholder="Search by name or email…" id="searchInput" oninput="renderTable()"/>
+      <button class="filter-btn active" id="filterAll" onclick="setFilter('all')">All leads</button>
+      <button class="filter-btn" id="filterGoogle" onclick="setFilter('google')">Google</button>
+      <button class="filter-btn" id="filterEmail" onclick="setFilter('email')">Email</button>
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+    </div>
+
+    <div id="errorMsg" class="error-msg" style="display:none"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Lead</th>
+            <th>Provider</th>
+            <th>Messages</th>
+            <th>Topics explored</th>
+            <th>Last active</th>
+            <th>Signed up</th>
+          </tr>
+        </thead>
+        <tbody id="leadsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let _secret = '';
+let _allLeads = [];
+let _filter = 'all';
+
+function doLogin() {
+  _secret = document.getElementById('secretInput').value.trim();
+  if (!_secret) return;
+  loadData();
+}
+
+async function loadData() {
+  try {
+    const r = await fetch(`/api/leads?secret=${encodeURIComponent(_secret)}`);
+    if (r.status === 401) {
+      document.getElementById('loginError').textContent = 'Wrong password.';
+      document.getElementById('loginError').style.display = 'block';
+      return;
+    }
+    const data = await r.json();
+    if (!data.ok) throw new Error(data.error);
+
+    _allLeads = data.leads || [];
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('errorMsg').style.display = 'none';
+
+    renderStats();
+    renderTable();
+    document.getElementById('dashSub').textContent = `${_allLeads.length} total leads · Last refreshed ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    document.getElementById('errorMsg').textContent = 'Error loading data: ' + e.message;
+    document.getElementById('errorMsg').style.display = 'block';
+  }
+}
+
+function renderStats() {
+  const total = _allLeads.length;
+  const google = _allLeads.filter(l => l.provider === 'google').length;
+  const withTopics = _allLeads.filter(l => l.topics_covered?.length > 0).length;
+  const msgTotal = _allLeads.reduce((s, l) => s + (l.message_count || 0), 0);
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="n">${total}</div><div class="l">Total leads</div></div>
+    <div class="stat-card"><div class="n">${google}</div><div class="l">Google sign-ins</div></div>
+    <div class="stat-card"><div class="n">${withTopics}</div><div class="l">Explored topics</div></div>
+    <div class="stat-card"><div class="n">${msgTotal}</div><div class="l">Total exchanges</div></div>`;
+}
+
+function setFilter(f) {
+  _filter = f;
+  ['all','google','email'].forEach(x => {
+    document.getElementById('filter' + x.charAt(0).toUpperCase() + x.slice(1))?.classList.toggle('active', x === f);
+  });
+  renderTable();
+}
+
+function renderTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let leads = _allLeads;
+  if (_filter !== 'all') leads = leads.filter(l => l.provider === _filter);
+  if (q) leads = leads.filter(l => (l.name||'').toLowerCase().includes(q) || (l.email||'').toLowerCase().includes(q));
+
+  const body = document.getElementById('leadsBody');
+  if (!leads.length) {
+    body.innerHTML = '<tr><td colspan="6" class="empty">No leads found.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = leads.map(l => {
+    const topics = (l.topics_covered || []).slice(0, 4).map(t => `<span class="topic-pill">${t}</span>`).join('');
+    const lastActive = l.last_active ? new Date(l.last_active).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : '—';
+    const createdAt = l.created_at ? new Date(l.created_at).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : '—';
+    const provClass = l.provider === 'google' ? 'google' : l.provider === 'email' ? 'email' : '';
+    return `<tr>
+      <td><span class="lead-name">${l.name || '—'}</span><span class="lead-email"><a href="mailto:${l.email}" style="color:inherit">${l.email}</a></span></td>
+      <td><span class="provider-badge ${provClass}">${l.provider || '—'}</span></td>
+      <td><span class="msg-count">${l.message_count || 0}</span></td>
+      <td>${topics || '<span style="color:var(--dim)">—</span>'}</td>
+      <td>${lastActive}</td>
+      <td>${createdAt}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

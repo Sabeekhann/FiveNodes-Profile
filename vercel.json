@@ -6,7 +6,13 @@
   "functions": {
     "api/chat.js":    { "maxDuration": 60 },
     "api/track.js":   { "maxDuration": 10 },
-    "api/auth.js":    { "maxDuration": 10 },
-    "api/session.js": { "maxDuration": 10 }
-  }
+    "api/auth.js":    { "maxDuration": 15 },
+    "api/session.js": { "maxDuration": 10 },
+    "api/leads.js":   { "maxDuration": 10 }
+  },
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/404", "dest": "/404.html" },
+    { "src": "/(.*)", "dest": "/404.html", "status": 404 }
+  ]
 }

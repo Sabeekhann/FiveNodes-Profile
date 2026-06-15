@@ -423,8 +423,27 @@ RESPONSE GUIDELINES — CRITICAL
 - **Format**: Bold key points. Bullets for lists. Zero walls of text. Zero headers in chat.
 - **NEVER use horizontal rules or dashes as separators** (no ---, no ———, no ___). Never. Not once. Ever.`;
 
+// Simple in-memory rate limiter: 30 messages per IP per hour
+const _rl = new Map();
+function rateLimit(ip) {
+  const now = Date.now();
+  const windowMs = 60 * 60 * 1000;
+  const limit = 30;
+  const entry = _rl.get(ip) || { count: 0, resetAt: now + windowMs };
+  if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + windowMs; }
+  entry.count++;
+  _rl.set(ip, entry);
+  return entry.count > limit;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
+
+  // Rate limit by IP
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+  if (rateLimit(ip)) {
+    return res.status(429).json({ error: 'Too many messages. Please try again later or book a call directly at https://calendly.com/sabee-5ivenodes/30min' });
+  }
 
   const { messages, lang, userContext } = req.body;
   if (!messages?.length) return res.status(400).json({ error: 'messages required' });

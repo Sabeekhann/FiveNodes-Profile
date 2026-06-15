@@ -137,6 +137,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .av{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;letter-spacing:.03em}
 .msg.ai .av{background:var(--lime);color:#05060E}
 .msg.ai .av svg{width:16px;height:16px;flex-shrink:0}
+.msg.ai{position:relative}
+.copy-btn{position:absolute;top:6px;right:6px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:4px 7px;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--dim);font-family:'Inter',sans-serif}
+.copy-btn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.msg.ai:hover .copy-btn{opacity:1}
+.copy-btn.copied{color:var(--lime);border-color:var(--lime-border)}
 .msg.user .av{background:var(--card2);border:1px solid var(--border2);color:var(--muted)}
 .bubble{background:var(--card);border:1px solid var(--border);border-radius:0 14px 14px 14px;padding:13px 16px;font-size:.875rem;line-height:1.74;color:var(--text);max-width:620px;word-break:break-word}
 .msg.user .bubble{background:var(--card2);border-color:var(--border2);border-radius:14px 0 14px 14px}
@@ -1238,7 +1243,40 @@ function loadArabicFont() {
 
 // ── GREETING ──
 function showGreeting() {
-  addAI(T('greeting'), [T('chip1'), T('chip2'), T('chip3'), T('chip4')]);
+  if (_authUser && _authUser.name) {
+    const firstName = _authUser.name.split(' ')[0];
+    _loadAndResumeSession(_authUser.email, firstName);
+  } else {
+    addAI(T('greeting'), [T('chip1'), T('chip2'), T('chip3'), T('chip4')]);
+  }
+}
+
+async function _loadAndResumeSession(email, firstName) {
+  try {
+    const r = await fetch(`/api/session?email=${encodeURIComponent(email)}`);
+    const data = await r.json();
+    const session = data.session;
+
+    if (session && session.messages) {
+      const msgs = typeof session.messages === 'string' ? JSON.parse(session.messages) : session.messages;
+      const lastActive = session.updated_at ? new Date(session.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : null;
+
+      if (Array.isArray(msgs) && msgs.length >= 2) {
+        // Show resume prompt
+        const lastAI = [...msgs].reverse().find(m => m.role === 'assistant');
+        const preview = lastAI ? lastAI.content.replace(/\*\*/g, '').slice(0, 90) + '…' : '';
+        addAI(
+          `Welcome back, **${firstName}**! ${lastActive ? `You were here on ${lastActive}.` : ''}\n\n${preview ? `_Last thing I told you: "${preview}"_\n\n` : ''}Want to **pick up where we left off**, or start fresh?`,
+          ['Resume our conversation', 'Start fresh']
+        );
+        // Store msgs for resume
+        window._pendingResume = msgs;
+        return;
+      }
+    }
+  } catch (_) {}
+  // Fallback: personalised first-time greeting
+  addAI(`Welcome back, **${firstName}**! Great to see you again. What are you working on today?`, [T('chip1'), T('chip2'), T('chip3'), T('chip4')]);
 }
 
 // ── RESTART ──
@@ -1356,6 +1394,11 @@ async function send() {
       signal: abortCtrl.signal,
     });
 
+    if (res.status === 429) {
+      removeEl(typingId);
+      addAI("You've sent a lot of messages — I need a short break! The fastest next step is a real conversation anyway. [Book 30 mins with Sabee →](https://calendly.com/sabee-5ivenodes/30min)");
+      setBusy(false); abortCtrl = null; return;
+    }
     if (!res.ok || !res.body) throw new Error('Request failed');
 
     removeEl(typingId);
@@ -1526,10 +1569,25 @@ const AI_AV = `<div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="#050
 function addAI(md, chips) {
   const d = document.createElement('div');
   d.className = 'msg ai';
-  d.innerHTML = `${AI_AV}<div class="bubble">${render(md)}</div>`;
+  d.innerHTML = `${AI_AV}<div class="bubble">${render(md)}</div>${copyBtn(md)}`;
   chat().appendChild(d);
   if (chips) showChips(chips);
   scrollBot();
+}
+
+function copyBtn(text) {
+  return `<button class="copy-btn" onclick="copyMsg(this,'${(text||'').replace(/'/g,"\\'").replace(/\n/g,' ').slice(0,500)}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button>`;
+}
+
+function copyMsg(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Copied';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy';
+    }, 2000);
+  }).catch(() => {});
 }
 
 function addTyping(id) {
@@ -1577,7 +1635,15 @@ function _twTick() {
     // Queue fully drained — do one silent final render and stop
     if (_twFinalText) {
       const el2 = document.getElementById(_twId);
-      if (el2) el2.innerHTML = render(_twFinalText);
+      if (el2) {
+        el2.innerHTML = render(_twFinalText);
+        // Add copy button to the parent .msg.ai element
+        const msgEl = el2.closest('.msg.ai');
+        if (msgEl && !msgEl.querySelector('.copy-btn')) {
+          const plain = _twFinalText.replace(/\*\*/g,'').replace(/\*/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1');
+          msgEl.insertAdjacentHTML('beforeend', copyBtn(plain));
+        }
+      }
     }
     _twRaf = null;
   } else {
@@ -1608,11 +1674,36 @@ function showChips(chips) {
   chips.forEach(c => {
     const b = document.createElement('button');
     b.className = 'chip'; b.textContent = c;
-    b.onclick = () => { row.remove(); document.getElementById('inp').value = c; send(); };
+    b.onclick = () => {
+      row.remove();
+      // Handle session resume chips
+      if (c === 'Resume our conversation' && window._pendingResume) {
+        _resumeSession(window._pendingResume);
+        window._pendingResume = null;
+        return;
+      }
+      if (c === 'Start fresh') {
+        window._pendingResume = null;
+        addAI(T('greeting'), [T('chip1'), T('chip2'), T('chip3'), T('chip4')]);
+        return;
+      }
+      document.getElementById('inp').value = c;
+      send();
+    };
     row.appendChild(b);
   });
   chat().appendChild(row);
   scrollBot();
+}
+
+function _resumeSession(msgs) {
+  // Replay past messages into history and UI silently, then show last AI msg
+  history.length = 0;
+  msgs.forEach(m => history.push(m));
+  const lastAI = [...msgs].reverse().find(m => m.role === 'assistant');
+  if (lastAI) {
+    addAI(`Got it — picking up where we left off. Here's what I last said:\n\n${lastAI.content}\n\nWhat would you like to explore next?`);
+  }
 }
 
 function generateChips(text) {
@@ -1832,11 +1923,12 @@ function _onAuthSuccess(name, email, provider, avatar) {
   if (fullConvo.match(/healthcare|hipaa|clinic|medical/)) _inferredInterests.push('Healthcare');
   if (fullConvo.match(/pric|cost|budget|engagement|retainer/)) _inferredInterests.push('Pricing & Engagement');
 
-  // Save lead to DB
+  // Save lead to DB (include topics for email notification)
+  const topicsCovered = Array.from(document.querySelectorAll('.topic-chip.covered')).map(el => el.textContent);
   fetch('/api/auth', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, provider, avatar, session_id: sid }),
+    body: JSON.stringify({ name, email, provider, avatar, session_id: sid, topics: topicsCovered }),
   }).catch(() => {});
 
   // Save full conversation session
