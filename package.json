@@ -4,6 +4,7 @@
   "private": true,
   "description": "FiveNodes AI-powered interactive company profile",
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "nodemailer": "^6.9.13"
   }
 }
