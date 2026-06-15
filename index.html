@@ -1502,7 +1502,7 @@ function afterResponse(bubbleId, text, userMsg) {
   generateChips(text);
 
   // Inline calendar — triggered by AI token OR user asking to book
-  const userWantsBook = /book|schedule|set.?up.?a.?call|get.?on.?a.?call|grab.?a.?(slot|time)|i.?want.?to.?(meet|talk|call)/i.test(userMsg||'');
+  const userWantsBook = /book|schedule|set.?up.?a.?call|get.?on.?a.?call|grab.?a.?(slot|time)|i.?want.?to.?(meet|talk|call)|how.?(do.?i|can.?i).?(reach|contact|connect|get.?in.?touch)|i.?m.?(ready|interested)|let.?s.?(move|do.?it|connect|talk)|i.?d.?like.?to.?(meet|speak|talk|connect)/i.test(userMsg||'');
   const aiShowCal = /\[SHOW_CALENDAR\]/i.test(text);
   if (aiShowCal || userWantsBook) injectCalendarCard();
 }
