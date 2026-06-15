@@ -429,6 +429,10 @@ function rateLimit(ip) {
   const now = Date.now();
   const windowMs = 60 * 60 * 1000;
   const limit = 30;
+  if (_rl.size > 10000) {
+    const cutoff = now - windowMs * 2;
+    for (const [k, e] of _rl.entries()) { if (e.resetAt < cutoff) _rl.delete(k); }
+  }
   const entry = _rl.get(ip) || { count: 0, resetAt: now + windowMs };
   if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + windowMs; }
   entry.count++;
@@ -466,6 +470,9 @@ export default async function handler(req, res) {
 
   const { messages, lang, userContext } = req.body;
   if (!messages?.length) return res.status(400).json({ error: 'messages required' });
+  if (!Array.isArray(messages) || messages.length > 100) return res.status(400).json({ error: 'Invalid messages' });
+  const totalChars = messages.reduce((s, m) => s + ((m?.content) || '').length, 0);
+  if (totalChars > 100000) return res.status(400).json({ error: 'Message content too long' });
 
   const LANG_NAMES = { ar:'Arabic', fr:'French', de:'German', es:'Spanish', zh:'Mandarin Chinese', pt:'Portuguese' };
   const langInstruction = lang && lang !== 'en' && LANG_NAMES[lang]

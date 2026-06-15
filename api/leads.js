@@ -5,6 +5,10 @@ function rateLimit(ip) {
   const now = Date.now();
   const window = 15 * 60 * 1000;
   const max = 10;
+  if (_rl.size > 5000) {
+    const cutoff = now - window * 2;
+    for (const [k, e] of _rl.entries()) { if (e.reset < cutoff) _rl.delete(k); }
+  }
   const entry = _rl.get(ip) || { count: 0, reset: now + window };
   if (now > entry.reset) { entry.count = 0; entry.reset = now + window; }
   entry.count++;

@@ -22,6 +22,11 @@ module.exports = async (req, res) => {
           'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
         },
       });
+      if (!r.ok) {
+        res.writeHead(r.status, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Database error' }));
+        return;
+      }
       const data = await r.json();
       const row = Array.isArray(data) ? data[0] : null;
       res.writeHead(200, { 'Content-Type': 'application/json' });

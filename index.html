@@ -1203,6 +1203,8 @@ document.addEventListener('click', function(e) {
 });
 
 function setLang(lang) {
+  const VALID_LANGS = ['en', 'ar', 'fr', 'de', 'es', 'zh', 'pt'];
+  if (!VALID_LANGS.includes(lang)) return;
   currentLang = lang;
   localStorage.setItem('fn-lang', lang);
   document.getElementById('langDropdown').classList.remove('open');
@@ -1719,9 +1721,10 @@ function showChips(chips) {
 }
 
 function _resumeSession(msgs) {
-  // Replay past messages into history and UI silently, then show last AI msg
+  if (!Array.isArray(msgs)) return;
   history.length = 0;
-  msgs.forEach(m => history.push(m));
+  msgs.forEach(m => { if (m && m.role && m.content) history.push(m); });
+  msgs.forEach(m => { if (m && m.role === 'assistant') updateTopics(m.content); });
   const lastAI = [...msgs].reverse().find(m => m.role === 'assistant');
   if (lastAI) {
     addAI(`Got it — picking up where we left off. Here's what I last said:\n\n${lastAI.content}\n\nWhat would you like to explore next?`);
@@ -1760,7 +1763,7 @@ function injectCards(bubbleEl, text) {
   found.forEach(({ proj }) => {
     const a = document.createElement('a');
     a.className = 'proj-card';
-    a.href = proj.url || 'https://5ivenodes.com/portfolio/';
+    a.href = (proj.url && /^https?:\/\//.test(proj.url)) ? proj.url : 'https://5ivenodes.com/portfolio/';
     a.target = '_blank';
     a.innerHTML = `
       <img class="proj-thumb" src="${proj.img}" alt="${proj.name}" onerror="this.style.display='none'">
@@ -2008,10 +2011,10 @@ function logout() {
   _authUser = null;
   localStorage.removeItem('fn-user');
   localStorage.removeItem('fn-authed');
+  sessionStorage.removeItem('fn-sid');
   document.getElementById('tbUserChip').classList.remove('vis', 'open');
   document.getElementById('drawerUserRow').classList.remove('vis');
   closeMobileDrawer();
-  // Reload so auth trigger resets cleanly
   location.reload();
 }
 
@@ -2142,7 +2145,7 @@ function _saveSession() {
 
 function submitEmail() {
   const email = document.getElementById('authEmail').value.trim();
-  if (!email || !email.includes('@')) return;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
   _onAuthSuccess(null, email, 'email', null);
 }
 
