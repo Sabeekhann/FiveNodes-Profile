@@ -199,6 +199,13 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .stop-btn:hover{background:rgba(255,77,106,.12)}
 .stop-btn svg{width:13px;height:13px;stroke:var(--red);fill:none;stroke-width:2.5}
 .stop-btn.vis{display:flex}
+.mic-btn{width:34px;height:34px;border-radius:9px;background:var(--card2);border:1px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;align-self:flex-end}
+.mic-btn:hover{border-color:var(--lime-border);color:var(--lime)}
+.mic-btn svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+.mic-btn:hover svg{stroke:var(--lime)}
+.mic-btn.listening{background:rgba(200,241,53,.1);border-color:var(--lime-border);animation:micPulse 1s ease-in-out infinite}
+.mic-btn.listening svg{stroke:var(--lime)}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(200,241,53,.3)}50%{box-shadow:0 0 0 6px rgba(200,241,53,0)}}
 
 /* ── TECH STACK GRID ── */
 .tech-grid{display:flex;flex-wrap:wrap;gap:7px;padding:8px 0 4px;animation:msgIn .3s ease}
@@ -601,6 +608,9 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
       <div class="input-area">
         <div class="input-row">
           <textarea id="inp" placeholder="Ask anything about FiveNodes…" data-i18n-placeholder="inp-placeholder" rows="1"></textarea>
+          <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Voice input">
+            <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
           <button class="stop-btn" id="stopBtn" onclick="stopStream()" title="Stop response">
             <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none" style="fill:var(--red)"/></svg>
           </button>
@@ -2044,6 +2054,74 @@ function _showWelcomeAnimation(name, _retries) {
     setTimeout(() => { overlay.classList.remove('active', 'hiding'); }, 700);
   }, 2800);
 }
+
+// ── VOICE INPUT ──
+(function() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    // Browser doesn't support — hide the button silently
+    document.addEventListener('DOMContentLoaded', () => {
+      const b = document.getElementById('micBtn');
+      if (b) b.style.display = 'none';
+    });
+    window.toggleVoice = () => {};
+    return;
+  }
+
+  let _sr = null;
+  let _listening = false;
+
+  window.toggleVoice = function() {
+    if (_listening) {
+      _sr && _sr.stop();
+      return;
+    }
+    _sr = new SR();
+    _sr.lang = currentLang === 'ar' ? 'ar-SA'
+              : currentLang === 'fr' ? 'fr-FR'
+              : currentLang === 'de' ? 'de-DE'
+              : currentLang === 'es' ? 'es-ES'
+              : currentLang === 'zh' ? 'zh-CN'
+              : currentLang === 'pt' ? 'pt-BR'
+              : 'en-US';
+    _sr.interimResults = true;
+    _sr.maxAlternatives = 1;
+
+    const btn = document.getElementById('micBtn');
+    const inp = document.getElementById('inp');
+
+    _sr.onstart = () => {
+      _listening = true;
+      btn.classList.add('listening');
+      inp.placeholder = 'Listening…';
+    };
+
+    _sr.onresult = (e) => {
+      const transcript = Array.from(e.results)
+        .map(r => r[0].transcript).join('');
+      inp.value = transcript;
+      inp.style.height = 'auto';
+      inp.style.height = Math.min(inp.scrollHeight, 130) + 'px';
+      // Auto-send on final result
+      if (e.results[e.results.length - 1].isFinal) {
+        _sr.stop();
+      }
+    };
+
+    _sr.onerror = () => { _sr.stop(); };
+
+    _sr.onend = () => {
+      _listening = false;
+      btn.classList.remove('listening');
+      const placeholder = document.querySelector('#inp[data-i18n-placeholder]');
+      inp.placeholder = T('inp-placeholder') || 'Ask anything about FiveNodes…';
+      // Send if there's text
+      if (inp.value.trim()) setTimeout(send, 120);
+    };
+
+    _sr.start();
+  };
+})();
 
 function _saveSession() {
   if (!_authUser) return;
