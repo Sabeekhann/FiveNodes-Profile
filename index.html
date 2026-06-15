@@ -303,37 +303,61 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 @media(max-width:820px){.lang-dropdown{right:auto;left:0}}
 
 /* ── AUTH MODAL ── */
-.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:all .25s}
+.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:all .28s}
 .auth-overlay.vis{opacity:1;visibility:visible}
-.auth-modal{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:32px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.6);transform:translateY(16px);transition:transform .25s}
-.auth-overlay.vis .auth-modal{transform:translateY(0)}
-.auth-modal-badge{display:inline-flex;align-items:center;gap:7px;background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:100px;padding:4px 13px;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:18px}
-.auth-modal h2{font-family:'Sora',sans-serif;font-size:1.35rem;font-weight:800;letter-spacing:-.03em;margin-bottom:8px;color:var(--text)}
-.auth-modal p{font-size:.875rem;color:var(--muted);line-height:1.65;margin-bottom:24px}
-.auth-modal p strong{color:var(--text);font-weight:500}
-.auth-btn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;padding:13px 16px;border-radius:12px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s;margin-bottom:10px;font-family:'Inter',sans-serif;border:none}
+.auth-modal{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:0;max-width:420px;width:100%;text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.7);transform:translateY(20px) scale(.97);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.auth-overlay.vis .auth-modal{transform:translateY(0) scale(1)}
+
+/* top accent bar */
+.auth-top{background:linear-gradient(135deg,rgba(200,241,53,.12),rgba(200,241,53,.04));border-bottom:1px solid var(--border);padding:24px 28px 20px;border-radius:24px 24px 0 0}
+.auth-free-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(200,241,53,.15);border:1px solid var(--lime-border);border-radius:100px;padding:4px 12px;font-size:.63rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:14px}
+.auth-free-badge svg{width:10px;height:10px;fill:var(--lime)}
+.auth-avatar-row{display:flex;align-items:center;justify-content:center;gap:-8px;margin-bottom:14px}
+.auth-avatar{width:36px;height:36px;border-radius:50%;border:2px solid var(--card);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--muted);margin-left:-8px}
+.auth-avatar:first-child{margin-left:0}
+.auth-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.auth-avatar-count{font-size:.7rem;color:var(--muted);margin-left:10px}
+.auth-modal h2{font-family:'Sora',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;color:var(--text)}
+.auth-modal .auth-sub{font-size:.845rem;color:var(--muted);line-height:1.65;margin:0}
+
+/* body */
+.auth-body{padding:22px 28px 24px}
+.auth-trust-row{display:flex;align-items:center;justify-content:center;gap:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:20px}
+.auth-trust-item{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);white-space:nowrap}
+.auth-trust-item svg{stroke:var(--lime);flex-shrink:0}
+.auth-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 16px;border-radius:12px;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .15s;margin-bottom:9px;font-family:'Inter',sans-serif;border:none;letter-spacing:-.01em}
 .auth-btn-google{background:#fff;color:#1f1f1f}
-.auth-btn-google:hover{background:#f5f5f5;transform:translateY(-1px)}
-.auth-btn-apple{background:#050505;color:#fff;border:1px solid #333}
-.auth-btn-apple:hover{background:#111;transform:translateY(-1px)}
+.auth-btn-google:hover{background:#f0f0f0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.auth-btn-apple{background:#111;color:#fff;border:1px solid #2a2a2a}
+.auth-btn-apple:hover{background:#1a1a1a;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.4)}
 .auth-btn svg{flex-shrink:0}
-.auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--dim);font-size:.75rem}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--dim);font-size:.72rem}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.auth-email-row{display:flex;gap:8px;margin-bottom:10px}
-.auth-email-row input{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border-color .15s}
-.auth-email-row input:focus{border-color:rgba(200,241,53,.4)}
+.auth-email-row{display:flex;gap:7px;margin-bottom:8px}
+.auth-email-row input{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border-color .15s;min-width:0}
+.auth-email-row input:focus{border-color:rgba(200,241,53,.45)}
 .auth-email-row input::placeholder{color:var(--dim)}
-.auth-email-submit{background:var(--lime);color:#05060E;border:none;border-radius:10px;padding:10px 16px;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:opacity .15s}
+.auth-email-submit{background:var(--lime);color:#05060E;border:none;border-radius:10px;padding:10px 16px;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:opacity .15s;flex-shrink:0}
 .auth-email-submit:hover{opacity:.88}
-.auth-skip{background:none;border:none;color:var(--dim);font-size:.75rem;cursor:pointer;margin-top:6px;font-family:'Inter',sans-serif;text-decoration:underline;text-underline-offset:2px}
+.auth-privacy{display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:4px;text-align:left}
+.auth-privacy svg{stroke:var(--lime);flex-shrink:0;margin-top:1px}
+.auth-privacy p{font-size:.7rem;color:var(--dim);line-height:1.55;margin:0}
+.auth-privacy p strong{color:var(--muted);font-weight:500}
+.auth-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.auth-skip{background:none;border:none;color:var(--dim);font-size:.72rem;cursor:pointer;font-family:'Inter',sans-serif;padding:0;transition:color .15s}
 .auth-skip:hover{color:var(--muted)}
-.auth-legal{font-size:.67rem;color:var(--dim);margin-top:14px;line-height:1.5}
-.auth-legal a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
-.auth-success{display:none;flex-direction:column;align-items:center;gap:10px}
-.auth-success-icon{width:52px;height:52px;border-radius:50%;background:var(--lime-bg);border:1px solid var(--lime-border);display:flex;align-items:center;justify-content:center}
-.auth-success-icon svg{stroke:var(--lime)}
-.auth-success h3{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)}
-.auth-success p{font-size:.85rem;color:var(--muted);margin:0}
+.auth-legal-link{font-size:.72rem;color:var(--dim)}
+.auth-legal-link a{color:var(--dim);text-decoration:underline;text-underline-offset:2px;transition:color .15s}
+.auth-legal-link a:hover{color:var(--muted)}
+
+/* success state */
+.auth-success{display:none;flex-direction:column;align-items:center;gap:12px;padding:36px 28px}
+.auth-success-icon{width:56px;height:56px;border-radius:50%;background:var(--lime-bg);border:1px solid var(--lime-border);display:flex;align-items:center;justify-content:center}
+.auth-success-icon svg{stroke:var(--lime);width:24px;height:24px}
+.auth-success h3{font-family:'Sora',sans-serif;font-size:1.15rem;font-weight:800;color:var(--text);margin:0}
+.auth-success p{font-size:.845rem;color:var(--muted);margin:0;line-height:1.6;max-width:300px}
+.auth-success-close{background:var(--lime);color:#05060E;border:none;border-radius:12px;padding:11px 28px;font-weight:700;font-size:.875rem;cursor:pointer;font-family:'Sora',sans-serif;transition:opacity .15s;margin-top:6px}
+.auth-success-close:hover{opacity:.88}
 
 /* ── RTL (Arabic) ── */
 [dir="rtl"]{font-family:'Cairo','Inter',sans-serif}
@@ -526,36 +550,80 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-modal" id="authModal">
+
+    <!-- FORM STATE -->
     <div id="authForm">
-      <div class="auth-modal-badge"><span class="wc-dot"></span>You're chatting with Alex</div>
-      <h2>Save this conversation</h2>
-      <p>Get a personalised follow-up from <strong>Sabee</strong> — FiveNodes' CEO — based on exactly what we've discussed.</p>
-      <button class="auth-btn auth-btn-google" id="googleSignInBtn" onclick="signInWithGoogle()">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 3-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.16C6.51 42.62 14.62 48 24 48z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.16C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.16C12.43 13.72 17.74 9.5 24 9.5z"/></svg>
-        Continue with Google
-      </button>
-      <button class="auth-btn auth-btn-apple" onclick="signInWithApple()">
-        <svg width="17" height="17" viewBox="0 0 814 1000" fill="white"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105.4-57.4-155.5-127.4C46.7 790.7 0 681.5 0 577.7 0 413.1 102.7 319.1 203.1 319.1c51.1 0 93.6 33.5 125.5 33.5 30.5 0 78.7-35.8 135.6-35.8 21.8 0 108.2 2 168.2 77.2zm-234.5-172.5c31.4-38.2 53.9-90.4 53.9-142.6 0-7.1-.6-14.3-1.9-20.1-50.9 1.9-110.8 33.8-147.1 75.8-28.5 32.4-55.1 84.6-55.1 137.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 134.7-69.9z"/></svg>
-        Continue with Apple
-      </button>
-      <div class="auth-divider">or</div>
-      <div class="auth-email-row">
-        <input type="email" id="authEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitEmail()"/>
-        <button class="auth-email-submit" onclick="submitEmail()">Send</button>
+      <!-- Top accent -->
+      <div class="auth-top">
+        <div class="auth-free-badge">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          100% Free — No credit card
+        </div>
+        <h2>Enjoying the conversation?</h2>
+        <p class="auth-sub">Drop your details and <strong>Sabee</strong> — FiveNodes' CEO — will personally follow up based on what you've shared. No sales pitch, just a real conversation.</p>
       </div>
-      <div style="text-align:center">
-        <button class="auth-skip" onclick="skipAuth()">Maybe later</button>
+
+      <!-- Body -->
+      <div class="auth-body">
+        <!-- Trust signals -->
+        <div class="auth-trust-row">
+          <div class="auth-trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Completely free
+          </div>
+          <div class="auth-trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            No spam, ever
+          </div>
+          <div class="auth-trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            CEO responds personally
+          </div>
+        </div>
+
+        <!-- Google -->
+        <button class="auth-btn auth-btn-google" onclick="signInWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 3-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.16C6.51 42.62 14.62 48 24 48z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.16C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.16C12.43 13.72 17.74 9.5 24 9.5z"/></svg>
+          Continue with Google
+        </button>
+
+        <!-- Apple -->
+        <button class="auth-btn auth-btn-apple" onclick="signInWithApple()">
+          <svg width="16" height="16" viewBox="0 0 814 1000" fill="white"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105.4-57.4-155.5-127.4C46.7 790.7 0 681.5 0 577.7 0 413.1 102.7 319.1 203.1 319.1c51.1 0 93.6 33.5 125.5 33.5 30.5 0 78.7-35.8 135.6-35.8 21.8 0 108.2 2 168.2 77.2zm-234.5-172.5c31.4-38.2 53.9-90.4 53.9-142.6 0-7.1-.6-14.3-1.9-20.1-50.9 1.9-110.8 33.8-147.1 75.8-28.5 32.4-55.1 84.6-55.1 137.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 134.7-69.9z"/></svg>
+          Continue with Apple
+        </button>
+
+        <!-- Email divider -->
+        <div class="auth-divider">or enter your email</div>
+        <div class="auth-email-row">
+          <input type="email" id="authEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitEmail()"/>
+          <button class="auth-email-submit" onclick="submitEmail()">Send →</button>
+        </div>
+
+        <!-- Privacy note -->
+        <div class="auth-privacy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <p>We only use your info to <strong>contact you if there's a fit</strong> — never for marketing, never sold to anyone. That's a promise.</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="auth-footer">
+          <button class="auth-skip" onclick="skipAuth()">Maybe later</button>
+          <span class="auth-legal-link"><a href="https://5ivenodes.com" target="_blank">Privacy Policy</a></span>
+        </div>
       </div>
-      <div class="auth-legal">By signing in you agree to our <a href="https://5ivenodes.com" target="_blank">Privacy Policy</a>. No spam — ever.</div>
     </div>
+
+    <!-- SUCCESS STATE -->
     <div class="auth-success" id="authSuccess">
       <div class="auth-success-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h3>You're connected!</h3>
-      <p>Sabee will personally follow up based on your conversation. Keep chatting.</p>
-      <button class="auth-btn auth-btn-google" style="margin-top:16px;width:auto;padding:10px 24px" onclick="closeAuth()">Continue chatting</button>
+      <h3>You're all set!</h3>
+      <p>Sabee will personally reach out based on your conversation. No spam — just a real follow-up when it makes sense.</p>
+      <button class="auth-success-close" onclick="closeAuth()">Continue chatting →</button>
     </div>
+
   </div>
 </div>
 
