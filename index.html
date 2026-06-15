@@ -690,7 +690,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
           100% Free — No credit card
         </div>
         <h2>Enjoying the conversation?</h2>
-        <p class="auth-sub">Drop your details and <strong>Sabee</strong> — FiveNodes' CEO — will personally follow up based on what you've shared. No sales pitch, just a real conversation.</p>
+        <p class="auth-sub">Drop your details and <strong>FiveNodes</strong> will personally follow up based on what you've shared. No sales pitch, just a real conversation.</p>
       </div>
 
       <!-- Body -->
@@ -744,7 +744,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <h3>You're all set!</h3>
-      <p>Sabee will personally reach out based on your conversation. No spam — just a real follow-up when it makes sense.</p>
+      <p>FiveNodes will personally reach out based on your conversation. No spam — just a real follow-up when it makes sense.</p>
       <button class="auth-success-close" onclick="closeAuth()">Continue chatting →</button>
     </div>
 
@@ -1368,13 +1368,13 @@ const DEMO = {
 
   process: "We run a structured 5-phase process: **Discovery** (architecture plan before any code), **Design Sprint** (Figma prototype you approve first), **Agile Build** (2-week sprints, weekly demos), **Launch**, then optional **ongoing retainer**.\n\nMVPs take 6 to 10 weeks. Full SaaS takes 3 to 6 months.\n\n**Greenfield build or scaling an existing product?**",
 
-  pricing: "We have four engagement models: fixed-price project, dedicated team, sprint retainer, and technical advisory. The right fit depends on your stage and scope.\n\nPricing is always custom scoped. The fastest way to get a number is a 30-minute call with Sabee.\n\n[Book a discovery call](https://calendly.com/sabee-5ivenodes/30min)",
+  pricing: "We have four engagement models: fixed-price project, dedicated team, sprint retainer, and technical advisory. The right fit depends on your stage and scope.\n\nPricing is always custom scoped. The fastest way to get a number is a 30-minute discovery call.\n\n[Book a discovery call](https://calendly.com/sabee-5ivenodes/30min)",
 
   iot: "IoT is a specialist area for us. We've built **Primal Plunge** (cold plunge chiller control via Tuya) and **Cayka** (full UK smart home platform) from scratch.\n\nWe handle the full stack: device protocol layer, cloud backend, and mobile app. Tuya, Zigbee, MQTT, BLE.\n\n**What device or hardware are you building around?**",
 
   fintech: "Fintech is our most active industry. We've built across payments, lending, investment, and compliance.\n\nKey work: **Numerico** (investment analytics), **Kashat** (real-time microloan decisioning), **FinQalab** (gamified financial literacy), **Peace Coin** (blockchain payments).\n\n**Payments, lending, investment, or compliance?**",
 
-  team: "20+ engineers, designers, and product specialists based in **Albuquerque, NM, US**. Every project is senior-led, no bait-and-switch.\n\nWe embed as your technical partner, not a vendor. In your Slack, on your standups, accountable to your roadmap.\n\n**Ready to talk specifics?** [Book a 30-min call with Sabee](https://calendly.com/sabee-5ivenodes/30min)",
+  team: "20+ engineers, designers, and product specialists based in **Albuquerque, NM, US**. Every project is senior-led, no bait-and-switch.\n\nWe embed as your technical partner, not a vendor. In your Slack, on your standups, accountable to your roadmap.\n\n**Ready to talk specifics?** [Book a 30-min discovery call](https://calendly.com/sabee-5ivenodes/30min)",
 };
 
 function getDemoResponse(txt) {
@@ -1447,7 +1447,7 @@ async function send() {
 
     if (res.status === 429) {
       removeEl(typingId);
-      addAI("You've sent a lot of messages — I need a short break! The fastest next step is a real conversation anyway. [Book 30 mins with Sabee →](https://calendly.com/sabee-5ivenodes/30min)");
+      addAI("You've sent a lot of messages — I need a short break! The fastest next step is a real conversation anyway. [Book 30 mins with FiveNodes →](https://calendly.com/sabee-5ivenodes/30min)");
       setBusy(false); abortCtrl = null; return;
     }
     if (!res.ok || !res.body) throw new Error('Request failed');
@@ -1552,19 +1552,19 @@ function injectCalendarCard() {
     <div class="cal-card-head">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <div class="cal-card-head-text">
-        <strong>Book a call with Sabee</strong>
+        <strong>Book a call with FiveNodes</strong>
         <span>30 min &nbsp;·&nbsp; Free discovery session &nbsp;·&nbsp; No commitment</span>
       </div>
     </div>
     <div class="cal-iframe-wrap">
       <div class="cal-loading" id="calLoading">
         <div class="cal-spinner"></div>
-        <span>Loading Sabee's calendar…</span>
+        <span>Loading calendar…</span>
       </div>
       <iframe
         src="https://calendly.com/sabee-5ivenodes/30min?embed_type=Inline&hide_landing_page_details=1&hide_gdpr_banner=1&background_color=0d0f1c&text_color=e8eaf2&primary_color=c8f135"
         onload="document.getElementById('calLoading').style.opacity='0';setTimeout(()=>document.getElementById('calLoading').style.display='none',300)"
-        title="Book a call with Sabee"
+        title="Book a call with FiveNodes"
       ></iframe>
     </div>`;
 
