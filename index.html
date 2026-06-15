@@ -331,8 +331,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .auth-btn-apple{background:#111;color:#fff;border:1px solid #2a2a2a}
 .auth-btn-apple:hover{background:#1a1a1a;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.4)}
 .auth-btn svg{flex-shrink:0}
-.auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--dim);font-size:.72rem}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-divider{display:flex;align-items:center;justify-content:center;margin:14px 0;color:var(--dim);font-size:.72rem}
 .auth-email-row{display:flex;gap:7px;margin-bottom:8px}
 .auth-email-row input{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border-color .15s;min-width:0}
 .auth-email-row input:focus{border-color:rgba(200,241,53,.45)}
@@ -358,6 +357,29 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 .auth-success p{font-size:.845rem;color:var(--muted);margin:0;line-height:1.6;max-width:300px}
 .auth-success-close{background:var(--lime);color:#05060E;border:none;border-radius:12px;padding:11px 28px;font-weight:700;font-size:.875rem;cursor:pointer;font-family:'Sora',sans-serif;transition:opacity .15s;margin-top:6px}
 .auth-success-close:hover{opacity:.88}
+
+/* ── WELCOME ANIMATION ── */
+.welcome-anim-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0}
+.welcome-anim-overlay.show{animation:waoFadeIn .4s ease forwards}
+.welcome-anim-overlay.hide{animation:waoFadeOut .6s ease forwards}
+@keyframes waoFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes waoFadeOut{from{opacity:1}to{opacity:0}}
+.welcome-anim-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(200,241,53,0.13) 0%,rgba(5,6,14,0.97) 60%)}
+.welcome-anim-card{position:relative;text-align:center;animation:wacPop .5s cubic-bezier(.34,1.56,.64,1) .1s both}
+@keyframes wacPop{from{opacity:0;transform:scale(.82) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.welcome-anim-ring{width:90px;height:90px;border-radius:50%;background:var(--lime-bg);border:2px solid var(--lime-border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:wacRing 1s ease .3s both}
+@keyframes wacRing{0%{box-shadow:0 0 0 0 rgba(200,241,53,.5)}70%{box-shadow:0 0 0 20px rgba(200,241,53,0)}100%{box-shadow:0 0 0 0 rgba(200,241,53,0)}}
+.welcome-anim-initials{font-family:'Sora',sans-serif;font-size:2rem;font-weight:800;color:var(--lime)}
+.welcome-anim-card h2{font-family:'Sora',sans-serif;font-size:1.7rem;font-weight:800;letter-spacing:-.04em;color:#fff;margin-bottom:8px}
+.welcome-anim-card p{font-size:.9rem;color:var(--muted);max-width:280px;margin:0 auto;line-height:1.6}
+.welcome-anim-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.wap{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--lime);animation:wapFloat linear both}
+@keyframes wapFloat{0%{opacity:0;transform:translateY(0) scale(0)}20%{opacity:1;transform:translateY(-20px) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(.3)}}
+
+/* ── TOPBAR SIGNED-IN CHIP ── */
+.tb-user-chip{display:none;align-items:center;gap:7px;background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:100px;padding:5px 12px 5px 6px;font-size:.73rem;font-weight:600;color:var(--lime);cursor:default}
+.tb-user-chip.vis{display:inline-flex}
+.tb-user-avatar{width:22px;height:22px;border-radius:50%;background:var(--lime);color:#05060E;font-family:'Sora',sans-serif;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* ── RTL (Arabic) ── */
 [dir="rtl"]{font-family:'Cairo','Inter',sans-serif}
@@ -444,10 +466,25 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
           <button class="lang-option" onclick="setLang('pt')"><span class="lang-flag">🇧🇷</span>Português<span class="lang-check">✓</span></button>
         </div>
       </div>
+      <div class="tb-user-chip" id="tbUserChip">
+        <div class="tb-user-avatar" id="tbUserAvatar">?</div>
+        <span id="tbUserName">Signed in</span>
+      </div>
       <a href="https://calendly.com/sabee-5ivenodes/30min" target="_blank" class="btn-cal">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span data-i18n="book">Book a call</span>
       </a>
+    </div>
+  </div>
+
+  <!-- Welcome animation overlay -->
+  <div class="welcome-anim-overlay" id="welcomeOverlay" aria-hidden="true">
+    <div class="welcome-anim-bg"></div>
+    <div class="welcome-anim-particles" id="welcomeParticles"></div>
+    <div class="welcome-anim-card">
+      <div class="welcome-anim-ring"><span class="welcome-anim-initials" id="welcomeInitials">?</span></div>
+      <h2 id="welcomeHeadline">Welcome!</h2>
+      <p id="welcomeSub">You're now signed in. The conversation is saved and I know who you are — let's keep going.</p>
     </div>
   </div>
 
@@ -1634,7 +1671,12 @@ function shareLink() {
 (function() {
   try {
     const stored = localStorage.getItem('fn-user');
-    if (stored) _authUser = JSON.parse(stored);
+    if (stored) {
+      _authUser = JSON.parse(stored);
+      if (_authUser && _authUser.email) {
+        _showSignedInChip(_authUser.name, _authUser.email);
+      }
+    }
   } catch {}
 })();
 
@@ -1709,6 +1751,49 @@ function _onAuthSuccess(name, email, provider, avatar) {
   document.getElementById('authForm').style.display = 'none';
   const s = document.getElementById('authSuccess');
   s.style.display = 'flex';
+
+  // Show signed-in chip + welcome animation
+  _showSignedInChip(name, email);
+  setTimeout(() => _showWelcomeAnimation(name), 400);
+}
+
+function _showSignedInChip(name, email) {
+  const initials = name
+    ? name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    : (email || '?')[0].toUpperCase();
+  const chipEl = document.getElementById('tbUserChip');
+  document.getElementById('tbUserAvatar').textContent = initials;
+  document.getElementById('tbUserName').textContent = name ? name.split(' ')[0] : email;
+  chipEl.classList.add('vis');
+}
+
+function _showWelcomeAnimation(name) {
+  const firstName = name ? name.trim().split(' ')[0] : 'there';
+  const initials = name
+    ? name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    : '👋';
+  const overlay = document.getElementById('welcomeOverlay');
+  document.getElementById('welcomeInitials').textContent = initials;
+  document.getElementById('welcomeHeadline').textContent = 'Welcome, ' + firstName + '!';
+  document.getElementById('welcomeSub').textContent = 'You\'re signed in. Your conversation is saved and I\'ll remember you next time.';
+
+  // Spawn particles
+  const container = document.getElementById('welcomeParticles');
+  container.innerHTML = '';
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'wap';
+    p.style.cssText = `left:${Math.random()*100}%;top:${60+Math.random()*30}%;animation-duration:${1.2+Math.random()*.8}s;animation-delay:${Math.random()*.6}s;opacity:${0.4+Math.random()*.6};width:${4+Math.random()*6}px;height:${4+Math.random()*6}px;background:${Math.random()>.5?'var(--lime)':'#fff'}`;
+    container.appendChild(p);
+  }
+
+  overlay.classList.remove('hide');
+  overlay.classList.add('show');
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    overlay.classList.add('hide');
+    setTimeout(() => { overlay.classList.remove('hide'); overlay.style.opacity = '0'; }, 700);
+  }, 2800);
 }
 
 function _saveSession() {
