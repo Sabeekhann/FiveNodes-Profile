@@ -383,13 +383,38 @@ RESPONSE GUIDELINES — CRITICAL
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { messages, lang } = req.body;
+  const { messages, lang, userContext } = req.body;
   if (!messages?.length) return res.status(400).json({ error: 'messages required' });
 
   const LANG_NAMES = { ar:'Arabic', fr:'French', de:'German', es:'Spanish', zh:'Mandarin Chinese', pt:'Portuguese' };
   const langInstruction = lang && lang !== 'en' && LANG_NAMES[lang]
     ? `\n\nCRITICAL: The user has selected ${LANG_NAMES[lang]} as their language. You MUST respond entirely in ${LANG_NAMES[lang]}. All your responses — every word — must be in ${LANG_NAMES[lang]}.`
     : '';
+
+  // Build personalisation block if user has signed in
+  let personalisationInstruction = '';
+  if (userContext && userContext.email) {
+    const parts = [];
+    if (userContext.name) parts.push(`Their name is ${userContext.name} — use it naturally, not in every message.`);
+    parts.push(`Their email is ${userContext.email}.`);
+    if (userContext.provider) parts.push(`They signed in via ${userContext.provider}.`);
+    if (userContext.topicsCovered?.length) parts.push(`Topics they have already explored: ${userContext.topicsCovered.join(', ')}.`);
+    if (userContext.sidebarClicks?.length) parts.push(`Sidebar sections they clicked: ${userContext.sidebarClicks.join(', ')} — they are clearly interested in these areas.`);
+    if (userContext.interests?.length) parts.push(`Inferred interests based on their questions: ${userContext.interests.join(', ')}.`);
+
+    personalisationInstruction = `\n\n═══════════════════════════════════════
+PERSONALISATION — THIS USER IS KNOWN
+═══════════════════════════════════════
+This user has signed in and shared their details. Treat them as a warm, identified lead — not a cold visitor.
+${parts.join('\n')}
+
+BEHAVIOUR CHANGES FOR THIS USER:
+- Greet them by first name on the very next message only (e.g. "Great question, [Name]" or just "[Name],") — never repeat it constantly.
+- Skip generic introductions about FiveNodes — they already know the basics from earlier in the conversation.
+- Reference what they have already explored: build on it, don't repeat it.
+- Be more direct about next steps — push toward a discovery call with Sabee more assertively, since they have shown real intent by signing in.
+- If they ask anything that could be scoped into a project, say "I'll make sure Sabee sees this conversation before your call" to reinforce the personal follow-up promise.`;
+  }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set' });
@@ -413,7 +438,7 @@ export default async function handler(req, res) {
         model: 'claude-sonnet-4-6',
         max_tokens: 1024,
         stream: true,
-        system: SYSTEM_PROMPT + langInstruction,
+        system: SYSTEM_PROMPT + langInstruction + personalisationInstruction,
         messages: messages.map(m => ({ role: m.role, content: m.content })),
       }),
     });

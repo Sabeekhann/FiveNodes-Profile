@@ -666,6 +666,11 @@ let busy = false;
 const shownCards = new Set();
 let abortCtrl = null;
 
+// ── USER STATE (populated after signup) ──
+let _authUser = null; // { name, email, provider, avatar }
+const _sidebarClicks = [];
+const _inferredInterests = [];
+
 // ── STOP STREAM ──
 function stopStream() {
   if (abortCtrl) { abortCtrl.abort(); abortCtrl = null; }
@@ -1249,7 +1254,18 @@ async function send() {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ messages: history, lang: currentLang }),
+      body: JSON.stringify({
+        messages: history,
+        lang: currentLang,
+        userContext: _authUser ? {
+          name: _authUser.name,
+          email: _authUser.email,
+          provider: _authUser.provider,
+          topicsCovered: Array.from(document.querySelectorAll('.topic-chip.covered')).map(el => el.textContent),
+          sidebarClicks: _sidebarClicks,
+          interests: _inferredInterests,
+        } : null,
+      }),
       signal: abortCtrl.signal,
     });
 
@@ -1310,6 +1326,8 @@ async function send() {
 // called after every complete AI response
 function afterResponse(bubbleId, text, userMsg) {
   _checkAuthTrigger();
+  // Save session to DB after every exchange if user is signed in
+  if (_authUser) _saveSession();
   const lower = text.toLowerCase();
   const userLower = (userMsg||'').toLowerCase();
   injectCards(bubbleId, text);
@@ -1358,7 +1376,12 @@ function quick(text) {
 
 function setSidebarActive(btn) {
   document.querySelectorAll('.sib-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    // Track what the user clicked for personalisation
+    const label = btn.querySelector('[data-i18n]')?.textContent || btn.textContent.trim();
+    if (label && !_sidebarClicks.includes(label)) _sidebarClicks.push(label);
+  }
 }
 
 // ── RENDER ──
@@ -1607,6 +1630,14 @@ function shareLink() {
   });
 }
 
+// ── RESTORE SIGNED-IN USER ON PAGE LOAD ──
+(function() {
+  try {
+    const stored = localStorage.getItem('fn-user');
+    if (stored) _authUser = JSON.parse(stored);
+  } catch {}
+})();
+
 // ── INIT LANGUAGE (must be last — depends on TRANSLATIONS const) ──
 applyLanguage();
 
@@ -1650,15 +1681,51 @@ function skipAuth() {
 
 function _onAuthSuccess(name, email, provider, avatar) {
   const sid = sessionStorage.getItem('fn-sid');
+
+  // Store user in memory so every subsequent message is personalised
+  _authUser = { name, email, provider, avatar };
+
+  // Infer interests from conversation so far
+  const fullConvo = history.map(m => m.content).join(' ').toLowerCase();
+  if (fullConvo.match(/saas|platform|product|startup|mvp/)) _inferredInterests.push('SaaS / Product Build');
+  if (fullConvo.match(/ai|llm|agent|rag|chatbot/)) _inferredInterests.push('AI & LLM Integration');
+  if (fullConvo.match(/fintech|payment|banking|lending/)) _inferredInterests.push('Fintech');
+  if (fullConvo.match(/iot|device|hardware|sensor/)) _inferredInterests.push('IoT & Hardware');
+  if (fullConvo.match(/healthcare|hipaa|clinic|medical/)) _inferredInterests.push('Healthcare');
+  if (fullConvo.match(/pric|cost|budget|engagement|retainer/)) _inferredInterests.push('Pricing & Engagement');
+
+  // Save lead to DB
   fetch('/api/auth', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, provider, avatar, session_id: sid }),
   }).catch(() => {});
+
+  // Save full conversation session
+  _saveSession();
+
   localStorage.setItem('fn-authed', 'true');
+  localStorage.setItem('fn-user', JSON.stringify({ name, email, provider }));
   document.getElementById('authForm').style.display = 'none';
   const s = document.getElementById('authSuccess');
   s.style.display = 'flex';
+}
+
+function _saveSession() {
+  if (!_authUser) return;
+  const sid = sessionStorage.getItem('fn-sid');
+  const topicsCovered = Array.from(document.querySelectorAll('.topic-chip.covered')).map(el => el.textContent);
+  fetch('/api/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: _authUser.email,
+      messages: history,
+      topics_covered: topicsCovered,
+      sidebar_clicks: _sidebarClicks,
+      session_id: sid,
+    }),
+  }).catch(() => {});
 }
 
 function submitEmail() {

@@ -4,8 +4,9 @@
   "outputDirectory": ".",
   "framework": null,
   "functions": {
-    "api/chat.js": { "maxDuration": 60 },
-    "api/track.js": { "maxDuration": 10 },
-    "api/auth.js": { "maxDuration": 10 }
+    "api/chat.js":    { "maxDuration": 60 },
+    "api/track.js":   { "maxDuration": 10 },
+    "api/auth.js":    { "maxDuration": 10 },
+    "api/session.js": { "maxDuration": 10 }
   }
 }

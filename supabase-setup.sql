@@ -28,3 +28,17 @@ CREATE INDEX IF NOT EXISTS visitors_session_idx  ON visitors  (session_id);
 CREATE INDEX IF NOT EXISTS visitors_created_idx  ON visitors  (created_at DESC);
 CREATE INDEX IF NOT EXISTS leads_email_idx       ON profile_leads (email);
 CREATE INDEX IF NOT EXISTS leads_created_idx     ON profile_leads (created_at DESC);
+
+-- Conversation sessions per signed-in user
+CREATE TABLE IF NOT EXISTS lead_sessions (
+  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  email          text UNIQUE NOT NULL,
+  messages       jsonb,
+  topics_covered text[],
+  sidebar_clicks text[],
+  session_id     text,
+  updated_at     timestamptz NOT NULL DEFAULT now(),
+  created_at     timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS sessions_email_idx ON lead_sessions (email);
