@@ -1910,27 +1910,25 @@ function showAuthModal() {
 function closeAuth() {
   document.getElementById('authOverlay').classList.remove('vis');
   const wasSuccess = document.getElementById('authSuccess').style.display === 'flex';
-  const pendingName = window._pendingWelcomeAnim;
-  window._pendingWelcomeAnim = null;
   setTimeout(() => {
     document.getElementById('authForm').style.display = '';
     document.getElementById('authSuccess').style.display = 'none';
-    if (wasSuccess) {
-      // If still on welcome screen, transition into chat first
-      if (document.getElementById('welcome').style.display !== 'none') {
-        document.getElementById('welcome').style.opacity = '0';
-        document.getElementById('welcome').style.pointerEvents = 'none';
-        setTimeout(() => {
-          document.getElementById('welcome').style.display = 'none';
-          document.getElementById('shell').classList.add('vis');
-          setTimeout(initSidebarHints, 800);
-        }, 300);
-        showGreeting();
-      }
-      // Fire welcome animation now that the modal is gone
-      if (pendingName !== null) {
-        setTimeout(() => _showWelcomeAnimation(pendingName), 200);
-      }
+    if (!wasSuccess) return;
+    const animName = _authUser ? _authUser.name : null;
+    if (document.getElementById('welcome').style.display !== 'none') {
+      // Still on welcome screen — transition to chat, then play animation
+      document.getElementById('welcome').style.opacity = '0';
+      document.getElementById('welcome').style.pointerEvents = 'none';
+      setTimeout(() => {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('shell').classList.add('vis');
+        setTimeout(initSidebarHints, 800);
+        _showWelcomeAnimation(animName);
+      }, 300);
+      showGreeting();
+    } else {
+      // Already in chat — play animation immediately
+      _showWelcomeAnimation(animName);
     }
   }, 300);
 }
@@ -1972,9 +1970,7 @@ function _onAuthSuccess(name, email, provider, avatar) {
   const s = document.getElementById('authSuccess');
   s.style.display = 'flex';
 
-  // Show signed-in chip — animation fires after modal closes (see closeAuth)
   _showSignedInChip(name, email);
-  window._pendingWelcomeAnim = name || email || '';
 }
 
 function _showSignedInChip(name, email) {
