@@ -1253,8 +1253,7 @@ function showGreeting() {
 
 async function _loadAndResumeSession(email, firstName) {
   try {
-    const sid = sessionStorage.getItem('fn-sid') || '';
-    const r = await fetch(`/api/session?email=${encodeURIComponent(email)}&session_id=${encodeURIComponent(sid)}`);
+    const r = await fetch(`/api/session?email=${encodeURIComponent(email)}`);
     const data = await r.json();
     const session = data.session;
 
@@ -1286,6 +1285,8 @@ function restartChat() {
   document.getElementById('chat').innerHTML = '';
   history.length = 0;
   shownCards.clear();
+  _authTriggered = false;
+  _aiMessageCount = 0;
   document.querySelectorAll('.topic-chip').forEach(c => c.classList.remove('covered'));
   document.querySelectorAll('.chips-row').forEach(c => c.remove());
   showGreeting();
@@ -1889,6 +1890,7 @@ let _aiMessageCount = 0;
 const _AUTH_THRESHOLD = 3; // show modal after 3rd AI response
 
 function _checkAuthTrigger() {
+  if (localStorage.getItem('fn-authed')) return;
   _aiMessageCount++;
   if (!_authTriggered && _aiMessageCount >= _AUTH_THRESHOLD) {
     _authTriggered = true;
@@ -2000,10 +2002,11 @@ document.addEventListener('click', () => {
   document.getElementById('tbUserChip')?.classList.remove('open');
 });
 
-function _showWelcomeAnimation(name) {
+function _showWelcomeAnimation(name, _retries) {
   // Only show after user has entered the chat shell, not on the splash screen
   if (document.getElementById('welcome').style.display !== 'none') {
-    setTimeout(() => _showWelcomeAnimation(name), 300);
+    if ((_retries || 0) >= 30) return; // give up after ~9 seconds
+    setTimeout(() => _showWelcomeAnimation(name, (_retries || 0) + 1), 300);
     return;
   }
 
