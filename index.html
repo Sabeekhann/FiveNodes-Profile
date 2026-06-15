@@ -1903,10 +1903,21 @@ function showAuthModal() {
 
 function closeAuth() {
   document.getElementById('authOverlay').classList.remove('vis');
-  // Reset modal back to form state so it's clean next time
+  const wasSuccess = document.getElementById('authSuccess').style.display === 'flex';
   setTimeout(() => {
     document.getElementById('authForm').style.display = '';
     document.getElementById('authSuccess').style.display = 'none';
+    // If user just signed in and is still on the welcome screen, enter the chat
+    if (wasSuccess && document.getElementById('welcome').style.display !== 'none') {
+      document.getElementById('welcome').style.opacity = '0';
+      document.getElementById('welcome').style.pointerEvents = 'none';
+      setTimeout(() => {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('shell').classList.add('vis');
+        setTimeout(initSidebarHints, 800);
+      }, 300);
+      showGreeting();
+    }
   }, 300);
 }
 
