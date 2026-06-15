@@ -1,9 +1,10 @@
 const nodemailer = require('nodemailer');
+const setCors = require('./_cors');
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  setCors(req, res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
   if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
 
@@ -11,13 +12,12 @@ module.exports = async (req, res) => {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { name, email, provider, avatar, session_id, topics } = body;
 
-    if (!email) {
+    if (!email || !EMAIL_RE.test(email)) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'email required' }));
+      res.end(JSON.stringify({ error: 'valid email required' }));
       return;
     }
 
-    // Upsert lead into Supabase
     const url = `${process.env.SUPABASE_URL}/rest/v1/profile_leads`;
     const r = await fetch(url, {
       method: 'POST',
@@ -40,7 +40,6 @@ module.exports = async (req, res) => {
 
     const data = await r.json();
 
-    // Send email notifications (fire-and-forget)
     sendEmails(name, email, provider, topics || []).catch(() => {});
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -66,7 +65,6 @@ async function sendEmails(name, email, provider, topics) {
   const providerLabel = provider === 'google' ? 'Google' : provider === 'email' ? 'email' : provider;
   const now = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', dateStyle: 'medium', timeStyle: 'short' });
 
-  // 1 — Notify Sabee
   await transporter.sendMail({
     from: `"FiveNodes AI Profile" <${gmailUser}>`,
     to: 'sabee@5ivenodes.com',
@@ -92,7 +90,6 @@ async function sendEmails(name, email, provider, topics) {
       </div>`,
   });
 
-  // 2 — Confirm to the lead
   await transporter.sendMail({
     from: `"Sabee at FiveNodes" <${gmailUser}>`,
     to: email,

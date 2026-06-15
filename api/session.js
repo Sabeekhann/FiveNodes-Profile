@@ -1,15 +1,22 @@
+const setCors = require('./_cors');
+
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  setCors(req, res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-  // GET — load a saved session for a returning signed-in user
   if (req.method === 'GET') {
-    const email = req.query?.email || new URL(req.url, 'http://x').searchParams.get('email');
-    if (!email) { res.writeHead(400); res.end(JSON.stringify({ error: 'email required' })); return; }
+    const params = new URL(req.url, 'http://x').searchParams;
+    const email = params.get('email');
+    const sessionId = params.get('session_id');
+
+    if (!email || !sessionId) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'email and session_id required' }));
+      return;
+    }
+
     try {
-      const url = `${process.env.SUPABASE_URL}/rest/v1/lead_sessions?email=eq.${encodeURIComponent(email)}&select=messages,topics_covered,sidebar_clicks,updated_at&limit=1`;
+      const url = `${process.env.SUPABASE_URL}/rest/v1/lead_sessions?email=eq.${encodeURIComponent(email)}&session_id=eq.${encodeURIComponent(sessionId)}&select=messages,topics_covered,sidebar_clicks,updated_at&limit=1`;
       const r = await fetch(url, {
         headers: {
           'apikey': process.env.SUPABASE_SERVICE_KEY,

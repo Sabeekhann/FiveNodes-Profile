@@ -1,14 +1,31 @@
+const setCors = require('./_cors');
+
+const _rl = new Map();
+function rateLimit(ip) {
+  const now = Date.now();
+  const window = 15 * 60 * 1000;
+  const max = 10;
+  const entry = _rl.get(ip) || { count: 0, reset: now + window };
+  if (now > entry.reset) { entry.count = 0; entry.reset = now + window; }
+  entry.count++;
+  _rl.set(ip, entry);
+  return entry.count > max;
+}
+
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  setCors(req, res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
   if (req.method !== 'GET') { res.writeHead(405); res.end(); return; }
 
-  // Simple password protection via Authorization header or ?secret= query param
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 'unknown';
+  if (rateLimit(ip)) {
+    res.writeHead(429, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Too many requests' }));
+    return;
+  }
+
   const secret = process.env.ADMIN_SECRET;
-  const provided = req.headers['authorization']?.replace('Bearer ', '') ||
-    new URL(req.url, 'http://x').searchParams.get('secret');
+  const provided = req.headers['authorization']?.replace('Bearer ', '').trim();
 
   if (!secret || provided !== secret) {
     res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -17,7 +34,6 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Fetch leads joined with session data
     const [leadsRes, sessionsRes] = await Promise.all([
       fetch(`${process.env.SUPABASE_URL}/rest/v1/profile_leads?select=*&order=created_at.desc&limit=200`, {
         headers: {
@@ -36,7 +52,6 @@ module.exports = async (req, res) => {
     const leads = await leadsRes.json();
     const sessions = await sessionsRes.json();
 
-    // Merge session data into leads
     const sessionMap = {};
     if (Array.isArray(sessions)) {
       sessions.forEach(s => { sessionMap[s.email] = s; });

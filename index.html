@@ -1253,7 +1253,8 @@ function showGreeting() {
 
 async function _loadAndResumeSession(email, firstName) {
   try {
-    const r = await fetch(`/api/session?email=${encodeURIComponent(email)}`);
+    const sid = sessionStorage.getItem('fn-sid') || '';
+    const r = await fetch(`/api/session?email=${encodeURIComponent(email)}&session_id=${encodeURIComponent(sid)}`);
     const data = await r.json();
     const session = data.session;
 
@@ -1569,14 +1570,20 @@ const AI_AV = `<div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="#050
 function addAI(md, chips) {
   const d = document.createElement('div');
   d.className = 'msg ai';
-  d.innerHTML = `${AI_AV}<div class="bubble">${render(md)}</div>${copyBtn(md)}`;
+  d.innerHTML = `${AI_AV}<div class="bubble">${render(md)}</div>`;
+  d.appendChild(copyBtn(md));
   chat().appendChild(d);
   if (chips) showChips(chips);
   scrollBot();
 }
 
 function copyBtn(text) {
-  return `<button class="copy-btn" onclick="copyMsg(this,'${(text||'').replace(/'/g,"\\'").replace(/\n/g,' ').slice(0,500)}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button>`;
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.dataset.copy = (text || '').slice(0, 2000);
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy';
+  btn.addEventListener('click', function() { copyMsg(this, this.dataset.copy); });
+  return btn;
 }
 
 function copyMsg(btn, text) {
@@ -1641,7 +1648,7 @@ function _twTick() {
         const msgEl = el2.closest('.msg.ai');
         if (msgEl && !msgEl.querySelector('.copy-btn')) {
           const plain = _twFinalText.replace(/\*\*/g,'').replace(/\*/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1');
-          msgEl.insertAdjacentHTML('beforeend', copyBtn(plain));
+          msgEl.appendChild(copyBtn(plain));
         }
       }
     }

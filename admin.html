@@ -118,7 +118,7 @@ function doLogin() {
 
 async function loadData() {
   try {
-    const r = await fetch(`/api/leads?secret=${encodeURIComponent(_secret)}`);
+    const r = await fetch('/api/leads', { headers: { 'Authorization': `Bearer ${_secret}` } });
     if (r.status === 401) {
       document.getElementById('loginError').textContent = 'Wrong password.';
       document.getElementById('loginError').style.display = 'block';

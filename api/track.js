@@ -1,7 +1,7 @@
+const setCors = require('./_cors');
+
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  setCors(req, res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
   if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
 
@@ -9,8 +9,7 @@ module.exports = async (req, res) => {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { page, referrer, session_id } = body;
 
-    const url = `${process.env.SUPABASE_URL}/rest/v1/visitors`;
-    await fetch(url, {
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/visitors`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

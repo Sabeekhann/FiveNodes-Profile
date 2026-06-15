@@ -436,7 +436,26 @@ function rateLimit(ip) {
   return entry.count > limit;
 }
 
+const ALLOWED_ORIGINS = [
+  'https://five-nodes-profile.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'http://localhost:8080',
+];
+function setCors(req, res) {
+  const origin = req.headers.origin || '';
+  const ok = ALLOWED_ORIGINS.includes(origin) ||
+    /^https:\/\/five-nodes-profile-[a-z0-9]+-sabeekhann\.vercel\.app$/.test(origin);
+  res.setHeader('Access-Control-Allow-Origin', ok ? origin : ALLOWED_ORIGINS[0]);
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Vary', 'Origin');
+}
+
 export default async function handler(req, res) {
+  setCors(req, res);
+  if (req.method === 'OPTIONS') { res.status(204).end(); return; }
   if (req.method !== 'POST') return res.status(405).end();
 
   // Rate limit by IP
@@ -485,7 +504,6 @@ BEHAVIOUR CHANGES FOR THIS USER:
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.flushHeaders();
 
   try {
