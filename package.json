@@ -2,5 +2,8 @@
   "name": "fivenodes-profile",
   "version": "1.0.0",
   "private": true,
-  "description": "FiveNodes AI-powered interactive company profile"
+  "description": "FiveNodes AI-powered interactive company profile",
+  "dependencies": {
+    "nodemailer": "^6.9.13"
+  }
 }
