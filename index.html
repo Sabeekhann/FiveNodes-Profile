@@ -42,35 +42,38 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 
 /* ── WELCOME ── */
 #welcome{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden}
-#welcome::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 60% at 50% 20%,rgba(200,241,53,0.07) 0%,transparent 65%),radial-gradient(ellipse 60% 40% at 20% 80%,rgba(200,241,53,0.03) 0%,transparent 60%);pointer-events:none}
+#welcome::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% 0%,rgba(200,241,53,0.09) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 10% 90%,rgba(200,241,53,0.04) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 90% 85%,rgba(200,241,53,0.03) 0%,transparent 60%);pointer-events:none}
 .wc-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,241,53,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,241,53,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 100%);pointer-events:none}
-.wc-inner{max-width:520px;width:100%;text-align:center;position:relative;animation:wcFadeUp .7s cubic-bezier(.22,1,.36,1) both}
+.wc-inner{max-width:480px;width:100%;text-align:center;position:relative;animation:wcFadeUp .7s cubic-bezier(.22,1,.36,1) both}
 @keyframes wcFadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-.wc-mascot-wrap{position:relative;display:inline-block;margin-bottom:28px}
-.wc-mascot-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(ellipse,rgba(200,241,53,0.18) 0%,transparent 70%);animation:mascotPulse 3s ease-in-out infinite;pointer-events:none}
-@keyframes mascotPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
-.wc-mascot{width:100px;height:100px;border-radius:26px;object-fit:cover;position:relative;box-shadow:0 0 0 1px rgba(200,241,53,0.2),0 20px 60px rgba(0,0,0,0.5);animation:mascotFloat 4s ease-in-out infinite}
-@keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.wc-mascot-ring{width:100px;height:100px;border-radius:26px;background:var(--card);border:2px solid rgba(200,241,53,0.25);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 0 1px rgba(200,241,53,0.1),0 20px 60px rgba(0,0,0,0.5);animation:mascotFloat 4s ease-in-out infinite}
-.wc-badge{display:inline-flex;align-items:center;gap:7px;background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:100px;padding:5px 14px;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:20px}
-.wc-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 2s ease-in-out infinite}
+.wc-mascot-wrap{position:relative;display:inline-block;margin-bottom:20px}
+.wc-mascot-glow{position:absolute;inset:-28px;border-radius:50%;background:radial-gradient(ellipse,rgba(200,241,53,0.22) 0%,transparent 70%);animation:mascotPulse 3s ease-in-out infinite;pointer-events:none}
+@keyframes mascotPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.2);opacity:1}}
+.wc-mascot{width:120px;height:120px;border-radius:30px;object-fit:cover;position:relative;box-shadow:0 0 0 2px rgba(200,241,53,0.25),0 24px 80px rgba(0,0,0,0.6);animation:mascotFloat 4s ease-in-out infinite}
+@keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.wc-mascot-ring{width:120px;height:120px;border-radius:30px;background:var(--card);border:2px solid rgba(200,241,53,0.25);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 0 1px rgba(200,241,53,0.1),0 24px 80px rgba(0,0,0,0.6);animation:mascotFloat 4s ease-in-out infinite}
+.wc-online{position:absolute;bottom:6px;right:6px;width:14px;height:14px;border-radius:50%;background:#22c55e;border:2.5px solid var(--bg);box-shadow:0 0 0 0 rgba(34,197,94,0.5);animation:onlinePing 2s ease-in-out infinite}
+@keyframes onlinePing{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.5)}60%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+.wc-name-chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:6px 16px;font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:18px}
+.wc-name-chip .wc-dot{background:#22c55e;flex-shrink:0}
+.wc-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 2s ease-in-out infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
-.wc-inner h1{font-family:'Sora',sans-serif;font-size:clamp(1.9rem,5vw,2.75rem);font-weight:800;letter-spacing:-.05em;line-height:1.12;margin-bottom:14px}
-.wc-inner h1 em{font-style:italic;font-weight:300;color:rgba(255,255,255,.32)}
+.wc-inner h1{font-family:'Sora',sans-serif;font-size:clamp(2rem,5.5vw,3rem);font-weight:800;letter-spacing:-.06em;line-height:1.08;margin-bottom:12px}
+.wc-inner h1 em{font-style:italic;font-weight:300;color:rgba(255,255,255,.28)}
 .wc-inner h1 .h1-lime{color:var(--lime)}
-.wc-sub{color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:28px;max-width:380px;margin-left:auto;margin-right:auto}
-.wc-stats{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--card)}
-.wc-stat{flex:1;padding:14px 8px;text-align:center;position:relative}
-.wc-stat+.wc-stat::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;background:var(--border)}
-.wc-stat-n{font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:var(--lime);letter-spacing:-.04em;line-height:1}
-.wc-stat-l{font-size:.65rem;color:var(--muted);margin-top:3px;letter-spacing:.02em}
-.wc-btn{width:100%;padding:16px;background:var(--lime);color:#05060E;font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s,transform .1s,box-shadow .15s;letter-spacing:-.01em;box-shadow:0 8px 32px rgba(200,241,53,0.25)}
-.wc-btn:hover{opacity:.92;transform:translateY(-2px);box-shadow:0 14px 40px rgba(200,241,53,0.35)}
+.wc-sub{color:var(--muted);font-size:.875rem;line-height:1.65;margin-bottom:24px;max-width:360px;margin-left:auto;margin-right:auto}
+.wc-qs{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.wc-q{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:.8125rem;color:var(--muted);text-align:left;cursor:pointer;transition:all .15s;font-family:var(--ff);display:flex;align-items:center;gap:10px}
+.wc-q::before{content:'↗';font-size:.75rem;color:var(--lime);flex-shrink:0;transition:transform .15s}
+.wc-q:hover{border-color:rgba(200,241,53,0.35);background:rgba(200,241,53,0.05);color:var(--text)}
+.wc-q:hover::before{transform:translate(2px,-2px)}
+.wc-btn{width:100%;padding:17px;background:var(--lime);color:#05060E;font-family:'Sora',sans-serif;font-weight:700;font-size:1.0625rem;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s,transform .1s,box-shadow .15s;letter-spacing:-.01em;box-shadow:0 8px 40px rgba(200,241,53,0.3)}
+.wc-btn:hover{opacity:.92;transform:translateY(-2px);box-shadow:0 16px 48px rgba(200,241,53,0.4)}
 .wc-btn:active{transform:translateY(0)}
 .wc-btn-arrow{display:inline-block;transition:transform .2s}
-.wc-btn:hover .wc-btn-arrow{transform:translateX(4px)}
-.wc-note{font-size:.72rem;color:var(--dim);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
-.wc-note-dot{width:3px;height:3px;border-radius:50%;background:var(--dim)}
+.wc-btn:hover .wc-btn-arrow{transform:translateX(5px)}
+.wc-note{font-size:.7rem;color:var(--dim);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.wc-note-dot{width:3px;height:3px;border-radius:50%;background:var(--dim);flex-shrink:0}
 
 /* ── SHELL ── */
 #shell{display:flex;flex-direction:column;height:100vh;height:100dvh;opacity:0;transition:opacity .4s}
@@ -313,11 +316,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
 }
 
 @media(max-width:480px){
-  .wc-inner h1{font-size:clamp(1.5rem,7vw,2rem)}
-  .wc-sub{font-size:.875rem}
-  .wc-btn{font-size:.9rem}
-  .wc-mascot{width:80px;height:80px}
-  .wc-mascot-ring{width:80px;height:80px}
+  .wc-inner h1{font-size:clamp(1.6rem,7.5vw,2.2rem)}
+  .wc-sub{font-size:.84rem;margin-bottom:18px}
+  .wc-btn{font-size:.9375rem;padding:15px}
+  .wc-mascot{width:90px;height:90px;border-radius:22px}
+  .wc-mascot-ring{width:90px;height:90px}
+  .wc-name-chip{font-size:.75rem;padding:5px 13px}
+  .wc-qs{gap:7px;margin-bottom:16px}
+  .wc-q{font-size:.78rem;padding:10px 13px}
   .chip{font-size:.74rem;padding:5px 11px}
   .topbar{padding:0 12px}
   .tb-mobile-topics{padding:6px 10px;font-size:.7rem}
@@ -467,21 +473,33 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
   <div class="wc-inner">
     <div class="wc-mascot-wrap">
       <div class="wc-mascot-glow"></div>
-      <img class="wc-mascot" src="images/bot-mascot.png" alt="FiveNodes AI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <img class="wc-mascot" src="images/bot-mascot.png" alt="Alex — FiveNodes AI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
       <div class="wc-mascot-ring" style="display:none">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="14" width="32" height="24" rx="7" fill="rgba(200,241,53,0.12)" stroke="rgba(200,241,53,0.4)" stroke-width="1.5"/><circle cx="18" cy="24" r="4" fill="var(--lime)"/><circle cx="30" cy="24" r="4" fill="var(--lime)"/><circle cx="18" cy="24" r="2" fill="#05060E"/><circle cx="30" cy="24" r="2" fill="#05060E"/><rect x="20" y="8" width="8" height="6" rx="2" fill="rgba(200,241,53,0.3)" stroke="rgba(200,241,53,0.4)" stroke-width="1.2"/><circle cx="24" cy="7" r="2" fill="var(--lime)"/><path d="M14 38v4M34 38v4" stroke="rgba(200,241,53,0.5)" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg width="52" height="52" viewBox="0 0 48 48" fill="none"><rect x="8" y="14" width="32" height="24" rx="7" fill="rgba(200,241,53,0.12)" stroke="rgba(200,241,53,0.4)" stroke-width="1.5"/><circle cx="18" cy="24" r="4" fill="var(--lime)"/><circle cx="30" cy="24" r="4" fill="var(--lime)"/><circle cx="18" cy="24" r="2" fill="#05060E"/><circle cx="30" cy="24" r="2" fill="#05060E"/><rect x="20" y="8" width="8" height="6" rx="2" fill="rgba(200,241,53,0.3)" stroke="rgba(200,241,53,0.4)" stroke-width="1.2"/><circle cx="24" cy="7" r="2" fill="var(--lime)"/><path d="M14 38v4M34 38v4" stroke="rgba(200,241,53,0.5)" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
+      <div class="wc-online"></div>
     </div>
-    <div class="wc-badge"><span class="wc-dot"></span><span data-i18n="badge">AI-Powered Company Profile</span></div>
-    <h1 data-i18n-html="h1">Your next <em>engineering</em><br/>partner is <span class="h1-lime">one chat away</span></h1>
-    <p class="wc-sub" data-i18n="sub">Ask anything about FiveNodes — our work, services, pricing, or how we can help your project. Our AI knows it all.</p>
-    <div class="wc-stats">
-      <div class="wc-stat"><div class="wc-stat-n">50+</div><div class="wc-stat-l" data-i18n="stat1">Products shipped</div></div>
-      <div class="wc-stat"><div class="wc-stat-n">20+</div><div class="wc-stat-l" data-i18n="stat2">Engineers</div></div>
-      <div class="wc-stat"><div class="wc-stat-n">8+</div><div class="wc-stat-l" data-i18n="stat3">Industries served</div></div>
+
+    <div class="wc-name-chip"><span class="wc-dot" style="background:#22c55e;animation:pulse 2s ease-in-out infinite"></span>Hi, I'm Alex — FiveNodes AI</div>
+
+    <h1>Your questions,<br/><em>answered</em> <span class="h1-lime">instantly.</span></h1>
+
+    <p class="wc-sub">No pitch deck. No waiting. Ask me anything about FiveNodes — what we've built, how long it takes, what it costs, or who you'd work with.</p>
+
+    <div class="wc-qs">
+      <button class="wc-q" onclick="startWithQ('What kind of products has FiveNodes built?')">What kind of products has FiveNodes built?</button>
+      <button class="wc-q" onclick="startWithQ('How long does it take to build an MVP?')">How long does it take to build an MVP?</button>
+      <button class="wc-q" onclick="startWithQ('How much does a project typically cost?')">How much does a project typically cost?</button>
     </div>
-    <button class="wc-btn" id="startBtn" data-i18n="start-btn">Start the conversation <span class="wc-btn-arrow">→</span></button>
-    <div class="wc-note"><span data-i18n="note">AI-powered</span><span class="wc-note-dot"></span><span>Free to use</span></div>
+
+    <button class="wc-btn" id="startBtn">Ask me anything <span class="wc-btn-arrow">→</span></button>
+    <div class="wc-note">
+      <span>⚡ Instant answers</span>
+      <span class="wc-note-dot"></span>
+      <span>No sign-up required</span>
+      <span class="wc-note-dot"></span>
+      <span>50+ products shipped</span>
+    </div>
   </div>
 </div>
 
@@ -925,16 +943,31 @@ function injectPricingTable() {
 }
 
 // ── START ──
-document.getElementById('startBtn').addEventListener('click', () => {
-  document.getElementById('welcome').style.opacity = '0';
-  document.getElementById('welcome').style.pointerEvents = 'none';
+function _dismissWelcome(cb) {
+  const w = document.getElementById('welcome');
+  w.style.opacity = '0';
+  w.style.pointerEvents = 'none';
   setTimeout(() => {
-    document.getElementById('welcome').style.display = 'none';
+    w.style.display = 'none';
     document.getElementById('shell').classList.add('vis');
     setTimeout(initSidebarHints, 800);
+    if (cb) cb();
   }, 300);
-  showGreeting();
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  _dismissWelcome(showGreeting);
 });
+
+window.startWithQ = function(q) {
+  _dismissWelcome(() => {
+    showGreeting();
+    setTimeout(() => {
+      const inp = document.getElementById('inp');
+      if (inp) { inp.value = q; send(); }
+    }, 500);
+  });
+};
 
 // ── TRANSLATIONS ──
 const TRANSLATIONS = {
