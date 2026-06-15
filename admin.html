@@ -113,11 +113,14 @@ tr:hover td{background:rgba(255,255,255,.02)}
 let _secret = '';
 let _allLeads = [];
 let _filter = 'all';
+let _autoRefreshInterval = null;
 
 function doLogin() {
   _secret = document.getElementById('secretInput').value.trim();
   if (!_secret) return;
   loadData();
+  if (_autoRefreshInterval) clearInterval(_autoRefreshInterval);
+  _autoRefreshInterval = setInterval(loadData, 30000);
 }
 
 async function loadData() {
@@ -138,7 +141,7 @@ async function loadData() {
 
     renderStats();
     renderTable();
-    document.getElementById('dashSub').textContent = `${_allLeads.length} total leads · Last refreshed ${new Date().toLocaleTimeString()}`;
+    document.getElementById('dashSub').textContent = `${_allLeads.length} total leads · Last refreshed ${new Date().toLocaleTimeString()} · Auto-refreshes every 30s`;
   } catch (e) {
     document.getElementById('errorMsg').textContent = 'Error loading data: ' + e.message;
     document.getElementById('errorMsg').style.display = 'block';
