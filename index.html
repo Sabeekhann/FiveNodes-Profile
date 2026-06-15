@@ -1906,19 +1906,27 @@ function showAuthModal() {
 function closeAuth() {
   document.getElementById('authOverlay').classList.remove('vis');
   const wasSuccess = document.getElementById('authSuccess').style.display === 'flex';
+  const pendingName = window._pendingWelcomeAnim;
+  window._pendingWelcomeAnim = null;
   setTimeout(() => {
     document.getElementById('authForm').style.display = '';
     document.getElementById('authSuccess').style.display = 'none';
-    // If user just signed in and is still on the welcome screen, enter the chat
-    if (wasSuccess && document.getElementById('welcome').style.display !== 'none') {
-      document.getElementById('welcome').style.opacity = '0';
-      document.getElementById('welcome').style.pointerEvents = 'none';
-      setTimeout(() => {
-        document.getElementById('welcome').style.display = 'none';
-        document.getElementById('shell').classList.add('vis');
-        setTimeout(initSidebarHints, 800);
-      }, 300);
-      showGreeting();
+    if (wasSuccess) {
+      // If still on welcome screen, transition into chat first
+      if (document.getElementById('welcome').style.display !== 'none') {
+        document.getElementById('welcome').style.opacity = '0';
+        document.getElementById('welcome').style.pointerEvents = 'none';
+        setTimeout(() => {
+          document.getElementById('welcome').style.display = 'none';
+          document.getElementById('shell').classList.add('vis');
+          setTimeout(initSidebarHints, 800);
+        }, 300);
+        showGreeting();
+      }
+      // Fire welcome animation now that the modal is gone
+      if (pendingName !== null) {
+        setTimeout(() => _showWelcomeAnimation(pendingName), 200);
+      }
     }
   }, 300);
 }
@@ -1960,9 +1968,9 @@ function _onAuthSuccess(name, email, provider, avatar) {
   const s = document.getElementById('authSuccess');
   s.style.display = 'flex';
 
-  // Show signed-in chip + welcome animation
+  // Show signed-in chip — animation fires after modal closes (see closeAuth)
   _showSignedInChip(name, email);
-  setTimeout(() => _showWelcomeAnimation(name), 400);
+  window._pendingWelcomeAnim = name || email || '';
 }
 
 function _showSignedInChip(name, email) {
